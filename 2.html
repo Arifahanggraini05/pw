@@ -33,6 +33,11 @@
       form input, form select, form button {
         margin-top: 5px;
       }
+      .checkbox-group {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
       table {
         width: 50%;
         border-collapse: collapse;
@@ -50,7 +55,7 @@
     </style>
   </head>
   <body>
-    <header><a href="https://anggraini.biz.id">Home</a></header>
+    <header><a href="https://ipwija.ac.id">Home</a></header>
     <main>
       Hi
     </main>
@@ -69,8 +74,10 @@
         <label>Warna:</label>
         <input type="color">
         <label>Jenis Kelamin:</label>
-        <input type="checkbox"> Laki-laki
-        <input type="checkbox"> Perempuan
+        <div class="checkbox-group">
+          <label><input type="checkbox"> Laki-laki</label>
+          <label><input type="checkbox"> Perempuan</label>
+        </div>
         <label>Semester:</label>
         <select>
           <option>1</option>
