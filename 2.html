@@ -1,57 +1,115 @@
+<!DOCTYPE html>
 <html>
   <head>
-    <tittle>Pertemuan 2 HTML Dasar</tittle>
+    <title>Pertemuan 2 HTML Dasar</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 20px;
+      }
+      header a {
+        text-decoration: none;
+        font-weight: bold;
+        color: blue;
+      }
+      main {
+        margin: 20px 0;
+      }
+      section {
+        margin-bottom: 20px;
+      }
+      img {
+        height: 100px;
+        width: 100px;
+      }
+      form {
+        display: flex;
+        flex-direction: column;
+        max-width: 300px;
+      }
+      form label {
+        margin-top: 10px;
+      }
+      form input, form select, form button {
+        margin-top: 5px;
+      }
+      table {
+        width: 50%;
+        border-collapse: collapse;
+      }
+      table, th, td {
+        border: 1px solid black;
+        padding: 10px;
+        text-align: center;
+      }
+      footer {
+        margin-top: 20px;
+        text-align: center;
+        font-weight: bold;
+      }
+    </style>
   </head>
   <body>
-    <header><a href="ipwija.ac.id"> Home </a></header>
-    <main> hi
-      </br>
-    </main id="main" class=""main>
-    <section> Hello World</section>
+    <header><a href="https://anggraini.biz.id">Home</a></header>
+    <main>
+      Hi
+    </main>
+    <section>
+      Hello World
+    </section>
     <section id="gambar">
-      <img src="espresso.jpg" heights="100" weight="100" >
+      <img src="espresso.jpg" alt="Espresso">
     </section>
     <section id="form">
       <form>
-        <label>Username:</label><input type="text">
-        <label>Password:</label><input type="password">
-        <label>Warna:</label><input type="color">
-        <label>Jenis Kelamin</label>
-        <label>Dropdown:</label>
-          <select>
-            <option>1</option>
-            <option>2</option>
-          </select>
-        <input type="submit" value="cancel">
-          <button>login</button>
+        <label>Username:</label>
+        <input type="text">
+        <label>Password:</label>
+        <input type="password">
+        <label>Warna:</label>
+        <input type="color">
+        <label>Jenis Kelamin:</label>
+        <input type="checkbox"> Laki-laki
+        <input type="checkbox"> Perempuan
+        <label>Semester:</label>
+        <select>
+          <option>1</option>
+          <option>2</option>
+          <option>3</option>
+          <option>4</option>
+          <option>5</option>
+          <option>6</option>
+          <option>7</option>
+          <option>8</option>
+        </select>
+        <label>Upload File:</label>
+        <input type="file">
+        <input type="submit" value="Cancel">
+        <button type="submit">Login</button>
       </form>
     </section>
     <section id="paragraf">
-      <p>
-        <h1> Pertemuan 2</h1>
-        <h2> HTML dasar </h2>
-        pertemuan 2, dasar HTML membuat paragraf </br> sederhana dengan huruf <i>miring</i>, <b>tebal</b>
-      </p>
-        <ul>
-          <li>1</li>
-          <li>2</li>
-        </ul>
-        <ol>
-          <li>satu</li>
-          <li>dua</li>
-        </ol>
+      <h1>Pertemuan 2</h1>
+      <h2>HTML Dasar</h2>
+      <p>Pertemuan 2, dasar HTML membuat paragraf <br> sederhana dengan huruf <i>miring</i>, <b>tebal</b></p>
+      <ul>
+        <li>1</li>
+        <li>2</li>
+      </ul>
+      <ol>
+        <li>Satu</li>
+        <li>Dua</li>
+      </ol>
     </section>
     <section id="table">
-      <h2>table</h2>
-      <table border="1">
+      <h2>Table</h2>
+      <table>
         <thead>
-           <tr><th>jan</th><th>feb</th></tr>
+          <tr><th>Jan</th><th>Feb</th></tr>
         </thead>
         <tbody>
-          
-        
-        <tr><td>1</td><td>2</td></tr>
-        <tr><td>3</td><td>4</td></tr>
+          <tr><td>1</td><td>2</td></tr>
+          <tr><td>3</td><td>4</td></tr>
         </tbody>
       </table>
     </section>
