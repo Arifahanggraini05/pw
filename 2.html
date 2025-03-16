@@ -73,22 +73,22 @@
     <section id="form">
       <form>
         <label>Username:</label>
-        <input type="text">
+        <input type="text" id="username" name="username">
         
         <label>Password:</label>
-        <input type="password">
+        <input type="password" id="password" name="password">
         
         <label>Warna:</label>
-        <input type="color">
+        <input type="color" id="warna" name="warna">
         
         <label>Jenis Kelamin:</label>
         <div class="checkbox-group">
-          <label><input type="checkbox"> Laki-laki</label>
-          <label><input type="checkbox"> Perempuan</label>
+          <label><input type="checkbox" id="laki" name="Jenis Kelamin"> Laki-laki</label>
+          <label><input type="checkbox" id="perempuan" name="Jenis Kelamin"> Perempuan</label>
         </div>
         
         <label for="tanggal">Masukkan Tanggal Lahir Anda :</label>
-        <input type="date"><br><br>
+        <input type="date" id="tanggal" name="tanggal_lahir"><br><br>
 
         <div class "radio-group">
           <label>Pilih Semester</label><br />
@@ -110,12 +110,12 @@
           ><br />
         </div>
 
-      </br>
+      <br />
         <label for="cari">Cari:</label>
         <input type="search" id="cari" name="cari" placeholder="Masukkan kata kunci"><br><br>
 
         <label>Upload File:</label>
-        <input type="file">
+        <input type="file" id="file" name="file">
         <button type="submit">Login</button>
         <input type="submit" value="Cancel">
         
