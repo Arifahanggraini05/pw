@@ -1,3 +1,154 @@
+<!DOCTYPE html>
 <html>
-  
+  <head>
+    <title>Pertemuan 2 HTML Dasar</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 20px;
+      }
+      header a {
+        text-decoration: none;
+        font-weight: bold;
+        color: blue;
+      }
+      main {
+        margin: 20px 0;
+      }
+      section {
+        margin-bottom: 20px;
+      }
+      img {
+        height: 100px;
+        width: 100px;
+      }
+      form {
+        display: flex;
+        flex-direction: column;
+        max-width: 300px;
+      }
+      form label {
+        margin-top: 10px;
+      }
+      form input, form select, form button {
+        margin-top: 5px;
+      }
+      .checkbox-group {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .radio-group {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .input type="submit" {
+        background-color: grey;
+      }
+      table {
+        width: 50%;
+        border-collapse: collapse;
+      }
+      table, th, td {
+        border: 1px solid black;
+        padding: 10px;
+        text-align: center;
+      }
+      footer {
+        margin-top: 20px;
+        text-align: center;
+        font-weight: bold;
+      }
+    </style>
+  </head>
+  <body>
+    <header><a href="https://anggraini.biz.id">Home</a></header>
+    <main>
+      Hi
+    </main>
+    <section>
+      Hello World
+    </section>
+    <section id="gambar">
+      <img src="espresso.jpg" alt="Espresso">
+    </section>
+    <section id="form">
+      <form>
+        <label>Username:</label>
+        <input type="text" id="username" name="username">
+        
+        <label>Password:</label>
+        <input type="password" id="password" name="password">
+        
+        <label>Warna:</label>
+        <input type="color" id="warna" name="warna">
+        
+        <label>Jenis Kelamin:</label>
+        <div class="checkbox-group">
+          <label><input type="checkbox" id="laki" name="Jenis Kelamin"> Laki-laki</label>
+          <label><input type="checkbox" id="perempuan" name="Jenis Kelamin"> Perempuan</label>
+        </div>
+        
+        <label for="tanggal">Masukkan Tanggal Lahir Anda :</label>
+        <input type="date" id="tanggal" name="tanggal_lahir"><br><br>
+
+        <div class "radio-group">
+          <label>Pilih Semester</label><br />
+          <input type="radio" id="1" name="semester" value="1" /><label for="1">1</label
+          ><br />
+          <input type="radio" id="2" name="semester" value="2" /><label for="2">2</label
+          ><br />
+          <input type="radio" id="3" name="semester" value="3" /><label for="3">3</label
+          ><br />
+          <input type="radio" id="4" name="semester" value="4" /><label for="4">4</label
+          ><br />
+          <input type="radio" id="5" name="semester" value="5" /><label for="5">5</label
+          ><br />
+          <input type="radio" id="6" name="semester" value="6" /><label for="6">6</label
+          ><br />
+          <input type="radio" id="7" name="semester" value="7" /><label for="7">7</label
+          ><br />
+          <input type="radio" id="8" name="semester" value="8" /><label for="8">8</label
+          ><br />
+        </div>
+
+      <br />
+        <label for="cari">Cari:</label>
+        <input type="search" id="cari" name="cari" placeholder="Masukkan kata kunci"><br><br>
+
+        <label>Upload File:</label>
+        <input type="file" id="file" name="file">
+        <button type="submit">Login</button>
+        <input type="submit" value="Cancel">
+        
+      </form>
+    </section>
+    <section id="paragraf">
+      <h1>Pertemuan 2</h1>
+      <h2>HTML Dasar</h2>
+      <p>Pertemuan 2, dasar HTML membuat paragraf <br> sederhana dengan huruf <i>miring</i>, <b>tebal</b></p>
+      <ul>
+        <li>1</li>
+        <li>2</li>
+      </ul>
+      <ol>
+        <li>Satu</li>
+        <li>Dua</li>
+      </ol>
+    </section>
+    <section id="table">
+      <h2>Table</h2>
+      <table>
+        <thead>
+          <tr><th>Jan</th><th>Feb</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>1</td><td>2</td></tr>
+          <tr><td>3</td><td>4</td></tr>
+        </tbody>
+      </table>
+    </section>
+    <footer>@2025</footer>
+  </body>
 </html>
