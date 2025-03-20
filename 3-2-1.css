@@ -1,4 +1,3 @@
-
 .row { width: 100%; display: table; table-layout: fixed; }
 .row::after { content: ""; clear: both; }
 [class*='col-'] { float: left;   word-wrap: break-word;}
