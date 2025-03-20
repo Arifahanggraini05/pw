@@ -35,7 +35,7 @@ button:hover,input[type=submit]:hover,input[type=button]:hover{background:aqua; 
 ul {margin: 0; padding: 0; list-style-type:none;}
 li {padding: 0; left:0; }
 
-table {border-collapse:collapse; border-spacing:1px; width:30%; color: #000;}
+table {border-collapse:collapse; border-spacing:1px; width:50%; color: #000;}
 table th, table td { border:none; text-align:left; padding:1px; }
 table tr { background:#f8f8f8; }
 table tr:nth-child(even){ background:#fff;}
