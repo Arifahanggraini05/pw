@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JavaScript & DOM (Document Object Model)</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; padding: 0; }
+        h1 { color: #2980b9; }
+        .box { width: 100px; height: 100px; background-color: #3498db; margin: 10px; }
+        button { padding: 10px 20px; border: none; background-color: #2ecc71; color: white; cursor: pointer; }
+        .boxx {width: 100px; height: 100px; background-color: lightblue; transition: 0.3s;}
+    </style>
+</head>
+<body>
+    <h1>JavaScript & DOM (Document Object Model)</h1>
+    <p>Contoh manipulasi DOM dengan JavaScript:</p>
+    <div class="box" id="colorBox"></div>
+    <button onclick="changeColor()">Ubah Warna</button>
+
+    <h1 id="judul">Bandung</h1>
+    <button class="btn">Click me!</button>
+
+    <div id="boxx">Arahkan Mouse ke Sini</div>
+
+    <script>
+        // Seleksi elemen DOM dan event handling
+        function changeColor() {
+            const box = document.getElementById('colorBox');
+            box.style.backgroundColor = box.style.backgroundColor === 'tomato' ? 'aquamarine' : 'tomato';
+
+        // contoh penggunaan 
+        let heading = document.getElementById("judul");
+        let tombol = document.querySelector(".btn");
+
+        tombol.addEventListener("click", function(){
+          heading.style.color="Coral";
+          heading.textContent="Jawa Barat";
+
+        });
+        // contoh mouseover salah satu event handling
+        let boxx = document.getElementById("boxx");
+
+        boxx.addEventListener("mouseover", function(){
+          boxx.style.backgroundColor="Cadet Blue";
+          boxx.textContent="Mouse di atas";
+        });
+
+        boxx.addEventListener("mouseout", function(){
+          boxx.style.backgroundColor="Dark Green";
+          boxx.textContent="Arahkan Mouse Ke Sini";
+        });
+
+
+        }
+    </script>
+</body>
+</html>
