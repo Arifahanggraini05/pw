@@ -54,7 +54,7 @@ async function login() {
     email: 'user@example.com', // ganti dengan akun terdaftar
     password: 'password123'     // ganti sesuai user
   })
-
+async function login() {
   const { data, error } = await supabase.auth.signInWithPassword({
     email: 'dunno@people.com', // ganti dengan akun terdaftar
     password: 'dunno123'     // ganti sesuai user
