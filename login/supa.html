@@ -55,6 +55,11 @@ async function login() {
     password: 'password123'     // ganti sesuai user
   })
 
+  const { data, error } = await supabase.auth.signInWithPassword({
+    email: 'dunno@people.com', // ganti dengan akun terdaftar
+    password: 'dunno123'     // ganti sesuai user
+  })
+
   if (error) {
     alert('Login gagal: ' + error.message)
     return
