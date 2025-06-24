@@ -2,8 +2,7 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8">
-  <title>Login Sederhana</title>
-  <link rel="script" href="script.js" />
+  <title>Login Supabase</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -37,7 +36,7 @@
       color: #333;
     }
 
-    .login-box input[type="text"],
+    .login-box input[type="email"],
     .login-box input[type="password"] {
       width: 100%;
       padding: 8px;
@@ -64,15 +63,14 @@
       background-color: #45a049;
     }
   </style>
-
 </head>
 <body>
 
-<div class="login-box" id="loginBox">
+<div class="login-box">
   <h2>Login</h2>
   <form id="loginForm">
-    <label>Username:
-      <input type="text" id="username" required>
+    <label>Email:
+      <input type="email" id="username" required>
     </label>
     <label>Password:
       <input type="password" id="password" required>
@@ -81,129 +79,31 @@
   </form>
 </div>
 
-<div class="login-box" id="welcomeBox" style="display: none;">
-  <h2 id="welcome">Halo, User!</h2>
-  <button onclick="logout()">Logout</button>
-</div>
-
 <script type="module">
-import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm'
+  import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm'
 
-const SUPABASE_URL = 'https://lmmiuxgdypnpjdvffxdi.supabase.co'
-const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxtbWl1eGdkeXBucGpkdmZmeGRpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDk1MjgyMjQsImV4cCI6MjA2NTEwNDIyNH0.aXRzfjm9uZw5gTHPgs7ZxyB4RQhNposr5AwRi1dofjU'
+  const supabase = createClient(
+    'https://lmmiuxgdypnpjdvffxdi.supabase.co',
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxtbWl1eGdkeXBucGpkdmZmeGRpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDk1MjgyMjQsImV4cCI6MjA2NTEwNDIyNH0.aXRzfjm9uZw5gTHPgs7ZxyB4RQhNposr5AwRi1dofjU' // Ganti dengan anon key kamu
+  )
 
-const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
-const content = document.getElementById('content')
+  document.getElementById('loginForm').addEventListener('submit', async function (e) {
+    e.preventDefault()
 
-// Coba login manual (bisa diganti pakai form)
-async function login() {
-  const { data, error } = await supabase.auth.signInWithPassword({
-    email: 'user@example.com', // ganti dengan akun terdaftar
-    password: 'password123'     // ganti sesuai user
-  })
+    const email = document.getElementById('username').value
+    const password = document.getElementById('password').value
 
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email,
+      password
+    })
 
-  if (error) {
-    alert('Login gagal: ' + error.message)
-    
-  } else {
-    window.location.href= 'supa.html'
-  }
-
-  loadData()
-}
-
-async function logout() {
-  await supabase.auth.signOut()
-  content.innerHTML = '<p>Logout berhasil.</p>'
-}
-
-// Load data hanya milik user yang login
-async function loadData() {
-  const {
-    data: { user }
-  } = await supabase.auth.getUser()
-
-  if (!user) {
-
-    content.innerHTML = '<p>Silakan login untuk melihat data.</p>'
-    return
-  }
-
-
-
-
-  const { data, error } = await supabase
-    .from('web3')
-    .select('*')
-    .order('id')
-
-  if (error) {
-    alert('Error loading data: ' + error.message)
-    return
-  }
-
-  let out = ''
-  data.forEach(row => {
-    out += `
-      <div class="content-card">
-        <h2>${row.judul}</h2>
-        <p>${row.isi}</p>
-      </div>
-    `
-  })
-
-  content.innerHTML = out
-
-}
-
-
-document.getElementById('loginBtn').addEventListener('click', login)
-document.getElementById('logoutBtn').addEventListener('click', logout)
-
-
-window.addEventListener('DOMContentLoaded', async () => {
-  const { data: { user } } = await supabase.auth.getUser()
-  if (user) loadData()
-})
-  // Simulasi user login (hardcoded)
-  const users = {
-    admin: '12345',
-    user: 'pass'
-  };
-
-  // Cek apakah user sudah login
-  function checkLogin() {
-    const session = localStorage.getItem('sessionUser');
-    if (session) {
-      document.getElementById('loginBox').style.display = 'none';
-      document.getElementById('welcomeBox').style.display = 'block';
-      document.getElementById('welcome').innerText = `Halo, ${session}!`;
-    }
-  }
-
-  // Tangani login
-  document.getElementById('loginForm').addEventListener('submit', function(e) {
-    e.preventDefault();
-    const uname = document.getElementById('username').value.trim();
-    const pass = document.getElementById('password').value.trim();
-
-    if (users[uname] && users[uname] === pass) {
-      localStorage.setItem('sessionUser', uname);
-      checkLogin();
+    if (error) {
+      alert('Login gagal: ' + error.message)
     } else {
-      alert('Username atau password salah!');
+      window.location.href = 'supa.html'
     }
-  });
-
-  // Logout
-  function logout() {
-    localStorage.removeItem('sessionUser');
-    location.reload();
-  }
-
-  // Jalankan saat pertama dimuat
-  checkLogin();
+  })
 </script>
 
 </body>
