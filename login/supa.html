@@ -1,124 +1,109 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Arifah Anggraini</title>
-  <link rel="stylesheet" href="style.css" />
+  <title>Data Web3</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 20px;
+      background-color: #f5f5f5;
+    }
+
+    .profile-container {
+      max-width: 800px;
+      margin: auto;
+      background: white;
+      border-radius: 10px;
+      padding: 20px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .content-card {
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      padding: 15px;
+      margin-top: 15px;
+      background-color: #f9f9f9;
+    }
+
+    button {
+      margin-bottom: 20px;
+      padding: 10px 20px;
+      background: crimson;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: darkred;
+    }
+  </style>
 </head>
 <body>
 <div class="profile-container">
-  <div class="header-bg" style="background-color: aquamarine"></div>
-  <div class="profile-photo-wrapper">
-    <img src="pw/profile.jpg" alt="profile" class="profile-photo" />
-  </div>
-
-  <div class="header-text">
-    <h1>Arifah Anggraini</h1>
-    <p class="subtitle">She/Her • Web Developer</p>
-    <p>Jakarta, Indonesia • <a href="anggraini.biz.id">Arifah Anggraini</a></p>
-    <p><strong>Informatika</strong> — Universitas Ipwija</p>
-  </div>
-
-  <div class="action-buttons">
-
-
-    <button id="loginBtn">Login untuk akses data</button>
-<button id="logoutBtn">Logout</button>
-
-  </div>
-
-  <div id="content"></div>
-
-  <div class="content-card">
-    <h3>Sosial Media</h3>
-    <ul>
-      <li><strong>linkedin :</strong> http://linkedin.com/in/sismadi</li>
-      <li><strong>credly :</strong> https://www.credly.com/users/wawan-sismadi</li>
-    </ul>
-  </div>
+  <h1>Data Web3</h1>
+  <button id="logoutBtn">Logout</button>
+  <div id="content">Memuat data...</div>
 </div>
 
 <script type="module">
-import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm'
+  import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm'
 
-const SUPABASE_URL = 'https://lmmiuxgdypnpjdvffxdi.supabase.co'
-const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxtbWl1eGdkeXBucGpkdmZmeGRpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDk1MjgyMjQsImV4cCI6MjA2NTEwNDIyNH0.aXRzfjm9uZw5gTHPgs7ZxyB4RQhNposr5AwRi1dofjU'
+  const supabase = createClient(
+    'https://lmmiuxgdypnpjdvffxdi.supabase.co',
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxtbWl1eGdkeXBucGpkdmZmeGRpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDk1MjgyMjQsImV4cCI6MjA2NTEwNDIyNH0.aXRzfjm9uZw5gTHPgs7ZxyB4RQhNposr5AwRi1dofjU' // Ganti dengan anon key kamu
+  )
 
-const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
-const content = document.getElementById('content')
+  const content = document.getElementById('content')
 
-// Coba login manual (bisa diganti pakai form)
-async function login() {
-  const { data, error } = await supabase.auth.signInWithPassword({
-    email: 'user@example.com', // ganti dengan akun terdaftar
-    password: 'password123'     // ganti sesuai user
-  })
+  async function loadData() {
+    const { data: { user } } = await supabase.auth.getUser()
 
+    if (!user) {
+      alert('Silakan login terlebih dahulu.')
+      window.location.href = 'index.html'
+      return
+    }
 
-  if (error) {
-    alert('Login gagal: ' + error.message)
-    return
+    const { data, error } = await supabase
+      .from('web3')
+      .select('*')
+      .order('id')
+
+    if (error) {
+      content.innerHTML = '<p>Gagal memuat data: ' + error.message + '</p>'
+      return
+    }
+
+    if (data.length === 0) {
+      content.innerHTML = '<p>Data tidak ditemukan.</p>'
+      return
+    }
+
+    let html = ''
+    data.forEach(row => {
+      html += `
+        <div class="content-card">
+          <h2>${row.judul}</h2>
+          <p>${row.isi}</p>
+        </div>
+      `
+    })
+
+    content.innerHTML = html
   }
+
+  document.getElementById('logoutBtn').addEventListener('click', async () => {
+    await supabase.auth.signOut()
+    window.location.href = 'index.html'
+  })
 
   loadData()
-}
-
-async function logout() {
-  await supabase.auth.signOut()
-  content.innerHTML = '<p>Logout berhasil.</p>'
-}
-
-// Load data hanya milik user yang login
-async function loadData() {
-  const {
-    data: { user }
-  } = await supabase.auth.getUser()
-
-  if (!user) {
-    window.location.href = 'index.html'
-
-    content.innerHTML = '<p>Silakan login untuk melihat data.</p>'
-  } else {
-    loadData()
-  }
-
-
-
-
-  const { data, error } = await supabase
-    .from('web3')
-    .select('*')
-    .order('id')
-
-  if (error) {
-    alert('Error loading data: ' + error.message)
-    return
-  }
-
-  let out = ''
-  data.forEach(row => {
-    out += `
-      <div class="content-card">
-        <h2>${row.judul}</h2>
-        <p>${row.isi}</p>
-      </div>
-    `
-  })
-
-  content.innerHTML = out
-
-}
-
-
-document.getElementById('loginBtn').addEventListener('click', login)
-document.getElementById('logoutBtn').addEventListener('click', logout)
-
-
-window.addEventListener('DOMContentLoaded', async () => {
-  const { data: { user } } = await supabase.auth.getUser()
-  if (user) loadData()
-})
 </script>
 
 </body>
