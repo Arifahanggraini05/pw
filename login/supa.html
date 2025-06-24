@@ -76,9 +76,11 @@ async function loadData() {
   } = await supabase.auth.getUser()
 
   if (!user) {
+    window.location.href = 'index.html'
 
     content.innerHTML = '<p>Silakan login untuk melihat data.</p>'
-    return
+  } else {
+    loadData()
   }
 
 
