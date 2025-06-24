@@ -105,7 +105,9 @@ async function login() {
 
   if (error) {
     alert('Login gagal: ' + error.message)
-    return
+    
+  } else {
+    window.location.href= 'supa.html'
   }
 
   loadData()
