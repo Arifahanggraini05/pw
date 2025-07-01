@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <title>Daftar Anggota</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="container">
+    <h1>Daftar Anggota</h1>
+    <form id="formAnggota">
+      <input type="text" id="nama" placeholder="Nama Lengkap" required />
+      <input type="email" id="email" placeholder="Email" required />
+      <input type="tel" id="telepon" placeholder="No Telepon" required />
+      <textarea id="alamat" placeholder="Alamat" required></textarea>
+      <input type="file" id="foto" accept="image/*" required />
+      <button type="submit">Daftar</button>
+    </form>
+    <p id="status"></p>
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supa.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
