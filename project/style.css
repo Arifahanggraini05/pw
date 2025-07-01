@@ -103,7 +103,7 @@ tr:hover {
 }
 
 /* Supaya teks nama, alamat, email tetap satu baris */
-#anggotaTable td {
+#anggotaTable td:not(:last-child) {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
