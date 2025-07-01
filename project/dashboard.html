@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard Admin</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="container">
+    <h1>Dashboard Admin</h1>
+    <button id="logoutBtn">Logout</button>
+
+    <form id="formAnggota">
+      <input type="text" id="nama" placeholder="Nama" required />
+      <input type="email" id="email" placeholder="Email" required />
+      <input type="tel" id="telepon" placeholder="Telepon" required />
+      <textarea id="alamat" placeholder="Alamat" required></textarea>
+      <input type="file" id="foto" accept="image/*" />
+      <button type="submit">Tambah</button>
+    </form>
+
+    <table id="anggotaTable" border="1">
+      <thead>
+        <tr>
+          <th>Foto</th>
+          <th>Nama</th>
+          <th>Email</th>
+          <th>Telepon</th>
+          <th>Alamat</th>
+          <th>Aksi</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </div>
+
+  <!-- Supabase SDK -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supa.js"></script>
+  <script src="dashboard.js"></script>
+</body>
+</html>
