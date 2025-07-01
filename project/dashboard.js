@@ -102,3 +102,13 @@ logoutBtn.addEventListener("click", async () => {
 });
 
 loadData();
+
+const toggleBtn = document.getElementById("toggleTableBtn");
+const tableWrapper = document.getElementById("tableWrapper");
+
+toggleBtn.addEventListener("click", () => {
+  const isVisible = tableWrapper.style.display === "block";
+  tableWrapper.style.display = isVisible ? "none" : "block";
+  toggleBtn.textContent = isVisible ? "Lihat Data Anggota" : "Sembunyikan Data Anggota";
+});
+
