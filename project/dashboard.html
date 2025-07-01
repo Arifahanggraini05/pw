@@ -19,8 +19,11 @@
       <input type="file" id="foto" accept="image/*" />
       <button type="submit">Tambah</button>
     </form>
+  </div>
 
-    <table id="anggotaTable" border="1">
+  <button type="button" id="toggleTableBtn">Lihat Data Anggota</button>
+  <div id="tableWrapper" style="display: none;">
+    <table id="anggotaTable">
       <thead>
         <tr>
           <th>Foto</th>
@@ -34,6 +37,7 @@
       <tbody></tbody>
     </table>
   </div>
+
 
   <div class="logout-container">
     <button id="logoutBtn">Logout</button>
