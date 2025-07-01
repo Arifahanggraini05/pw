@@ -110,4 +110,10 @@ tr:hover {
   max-width: 150px;
 }
 
+#anggotaTable td:last-child {
+  white-space: nowrap;
+  max-width: 160px;
+}
+
+
 
