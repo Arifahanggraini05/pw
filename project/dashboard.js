@@ -62,7 +62,7 @@ async function loadData() {
   data.forEach(a => {
     const row = document.createElement("tr");
     row.innerHTML = `
-      <td><img src="${a.foto}" width="50" /></td>
+      <td><img src="${a.foto}" class="anggota-foto" /></td>
       <td>${a.nama}</td>
       <td>${a.email}</td>
       <td>${a.telepon}</td>
