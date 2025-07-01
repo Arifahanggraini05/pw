@@ -94,3 +94,20 @@ tr:hover {
   background-color: #d32f2f;
 }
 
+/* Gambar lebih besar di tabel */
+#anggotaTable img {
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+/* Supaya teks nama, alamat, email tetap satu baris */
+#anggotaTable td {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 150px;
+}
+
+
