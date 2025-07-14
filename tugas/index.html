@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Katalog sepatu online dengan berbagai pilihan model dan ukuran. Belanja mudah dengan sistem checkout yang aman dan pengiriman terpercaya.">
+  <meta name="keywords" content="sepatu, katalog sepatu, belanja online, sepatu murah, toko sepatu">
+  <meta name="robots" content="index, follow">
+  <meta name="author" content="Katalog Sepatu">
+  
+  <!-- Open Graph Meta Tags -->
+  <meta property="og:title" content="Katalog Sepatu - Belanja Sepatu Online">
+  <meta property="og:description" content="Temukan koleksi sepatu terbaik dengan harga terjangkau. Checkout mudah dan pengiriman cepat.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://yoursite.com">
+  <meta property="og:image" content="https://yoursite.com/logo.png">
+  
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Katalog Sepatu - Belanja Sepatu Online">
+  <meta name="twitter:description" content="Temukan koleksi sepatu terbaik dengan harga terjangkau">
+  
+  <title>Katalog Sepatu - Belanja Sepatu Online Terpercaya</title>
+  
+  <!-- Preload Critical Resources -->
+  <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" as="style">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://hmwtsbgdizxkkhcwaury.supabase.co" crossorigin>
+  
+  <!-- Critical CSS Inline -->
+  <style>
+    /* Critical CSS for above-the-fold content */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: #2c3e50;
+      line-height: 1.6;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    
+    .hidden {
+      display: none !important;
+    }
+    
+    .login-selection {
+      max-width: 420px;
+      width: 100%;
+      padding: 40px;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      border-radius: 20px;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+      text-align: center;
+      animation: fadeIn 0.6s ease-out;
+    }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    h1 {
+      font-size: 2rem;
+      font-weight: 700;
+      color: #2c3e50;
+      margin-bottom: 1rem;
+    }
+    
+    .login-selection p {
+      color: #64748b;
+      margin-bottom: 2rem;
+      font-size: 1rem;
+    }
+    
+    button {
+      width: 100%;
+      padding: 16px;
+      margin: 8px 0;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      border: none;
+      color: white;
+      font-size: 16px;
+      font-weight: 600;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+      position: relative;
+      overflow: hidden;
+    }
+    
+    button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+    }
+    
+    button:focus {
+      outline: 2px solid #667eea;
+      outline-offset: 2px;
+    }
+    
+    button:active {
+      transform: translateY(0);
+    }
+    
+    #messageArea {
+      position: fixed;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #fee;
+      color: #c53030;
+      padding: 12px 24px;
+      border-radius: 8px;
+      border: 1px solid #feb2b2;
+      font-weight: 500;
+      z-index: 1000;
+      max-width: 90%;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+    
+    .success {
+      background: #f0fff4 !important;
+      color: #22543d !important;
+      border-color: #9ae6b4 !important;
+    }
+  </style>
+  
+  <!-- Load non-critical CSS -->
+  <link rel="stylesheet" href="style.css" media="print" onload="this.media='all'">
+  <noscript><link rel="stylesheet" href="style.css"></noscript>
+  
+  <!-- Load external resources -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Schema.org structured data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Store",
+    "name": "Katalog Sepatu",
+    "description": "Toko sepatu online dengan koleksi lengkap dan harga terjangkau",
+    "url": "https://yoursite.com",
+    "telephone": "+62-812-8030-6674",
+    "address": {
+      "@type": "PostalAddress",
+      "addressCountry": "ID"
+    },
+    "openingHours": "Mo-Su 00:00-23:59",
+    "currenciesAccepted": "IDR",
+    "paymentAccepted": "Cash, Credit Card, Bank Transfer"
+  }
+  </script>
+</head>
+<body>
+  <!-- Skip to content link for accessibility -->
+  <a href="#main-content" class="skip-link">Skip to main content</a>
+  
+  <noscript>
+    <div style="text-align:center; background:#fff3cd; padding:20px; border-radius:8px; margin:20px;">
+      <h2>JavaScript Required</h2>
+      <p>Katalog ini memerlukan JavaScript untuk berfungsi dengan sempurna. Silakan aktifkan JavaScript di browser Anda.</p>
+    </div>
+  </noscript>
+  
+  <main id="main-content">
+    <div id="messageArea" role="alert" aria-live="polite" style="display:none;"></div>
+    
+    <!-- Halaman Pilihan Role -->
+    <section class="login-selection fade-in" id="roleSelector" aria-labelledby="role-heading">
+      <h1 id="role-heading">Masuk Sebagai</h1>
+      <p>Pilih peran untuk memulai belanja di katalog sepatu kami.</p>
+      <button type="button" aria-label="Masuk sebagai pembeli untuk berbelanja" onclick="selectRole('user')">
+        👤 Pembeli
+      </button>
+      <button type="button" aria-label="Masuk sebagai admin untuk mengelola produk" onclick="selectRole('admin')">
+        ⚙️ Admin
+      </button>
+    </section>
+
+    <!-- Halaman Login Admin -->
+    <section class="login-form hidden fade-in" id="adminLogin" aria-labelledby="admin-login-heading">
+      <h2 id="admin-login-heading">Login Admin</h2>
+      <form onsubmit="loginAdmin(event)" aria-label="Form login admin">
+        <label for="adminUser">Username</label>
+        <input type="text" id="adminUser" placeholder="Masukkan username admin" required 
+               autocomplete="username" aria-describedby="admin-user-help" />
+        <small id="admin-user-help" class="sr-only">Masukkan username admin yang valid</small>
+        
+        <label for="adminPass">Password</label>
+        <input type="password" id="adminPass" placeholder="Masukkan password admin" required 
+               autocomplete="current-password" aria-describedby="admin-pass-help" />
+        <small id="admin-pass-help" class="sr-only">Masukkan password admin yang valid</small>
+        
+        <button type="submit">Login</button>
+      </form>
+      <div id="adminLoginMsg" style="color:red; margin-top:10px;" role="alert" aria-live="assertive"></div>
+      <button type="button" onclick="backToRoleMenu()" style="background:#6c757d; margin-top:10px;">
+        ← Kembali
+      </button>
+    </section>
+
+    <!-- Halaman Admin -->
+    <section class="container hidden" id="adminSection" aria-labelledby="admin-heading">
+      <h2 id="admin-heading">Panel Admin</h2>
+      
+      <div class="admin-panel">
+        <h3>Tambah Produk Baru</h3>
+        <form onsubmit="addProduct(event)" aria-label="Form tambah produk">
+          <label for="newName">Nama Sepatu</label>
+          <input type="text" id="newName" placeholder="Contoh: Nike Air Max" required 
+                 aria-describedby="name-help" />
+          <small id="name-help" class="form-help">Masukkan nama sepatu yang jelas dan menarik</small>
+          
+          <label for="newPrice">Harga (Rp)</label>
+          <input type="number" id="newPrice" placeholder="250000" required min="1" 
+                 aria-describedby="price-help" />
+          <small id="price-help" class="form-help">Masukkan harga dalam Rupiah tanpa titik</small>
+          
+          <label for="newImage">URL Gambar</label>
+          <input type="url" id="newImage" placeholder="https://example.com/image.jpg" required 
+                 aria-describedby="image-help" />
+          <small id="image-help" class="form-help">Masukkan URL gambar yang valid (jpg, png, webp)</small>
+          
+          <button type="submit">Tambah Produk</button>
+        </form>
+      </div>
+  
+      <div class="admin-section">
+        <h3>Daftar Produk</h3>
+        <div id="adminProductList" role="region" aria-label="Daftar produk yang tersedia"></div>
+      </div>
+  
+      <div class="admin-section">
+        <h3>Riwayat Pembelian</h3>
+        <div id="purchaseHistory" role="region" aria-label="Riwayat pembelian pelanggan"></div>
+      </div>
+      
+      <button type="button" onclick="logout()" style="background:#dc3545; margin-top:20px;">
+        🚪 Keluar
+      </button>
+    </section>
+
+    <!-- Halaman Pembeli -->
+    <section class="container hidden" id="userSection" aria-labelledby="catalog-heading">
+      <header>
+        <h2 id="catalog-heading">Katalog Sepatu</h2>
+        <nav class="user-nav">
+          <button type="button" onclick="showCart()" aria-label="Lihat keranjang belanja">
+            🛒 Keranjang (<span id="cartCount">0</span>)
+          </button>
+          <button type="button" onclick="backToRoleMenu()" aria-label="Kembali ke menu utama">
+            🔙 Kembali
+          </button>
+        </nav>
+      </header>
+      
+      <div id="loadingProducts" class="loading" role="status" aria-label="Memuat produk">
+        <div class="spinner"></div>
+        <p>Memuat produk...</p>
+      </div>
+      
+      <div id="productList" class="product-grid" role="region" aria-label="Daftar produk sepatu"></div>
+    </section>
+
+    <!-- Halaman Keranjang Belanja -->
+    <section class="container hidden" id="cartSection" aria-labelledby="cart-heading">
+      <h2 id="cart-heading">Keranjang Belanja</h2>
+      
+      <div id="cartItems" role="region" aria-label="Item dalam keranjang"></div>
+      <div class="cart-summary">
+        <p><strong>Subtotal: Rp <span id="totalPrice">0</span></strong></p>
+      </div>
+  
+      <div class="shipping-section">
+        <label for="shippingMethod">Metode Pengiriman:</label>
+        <select id="shippingMethod" onchange="updateShipping()" aria-describedby="shipping-help">
+          <option value="Reguler">Reguler (5-6 hari) - Rp 10.000</option>
+          <option value="Express">Express (2-3 hari) - Rp 20.000</option>
+        </select>
+        <small id="shipping-help" class="form-help">Pilih metode pengiriman yang diinginkan</small>
+        <p><strong>Ongkir:</strong> Rp <span id="shippingCost">10.000</span></p>
+      </div>
+  
+      <div class="checkout-section">
+        <h3>Informasi Pembeli</h3>
+        <form onsubmit="checkout(event)" aria-label="Form checkout">
+          <label for="buyerName">Nama Lengkap</label>
+          <input type="text" id="buyerName" placeholder="Masukkan nama lengkap" required 
+                 autocomplete="name" aria-describedby="name-checkout-help" />
+          <small id="name-checkout-help" class="form-help">Masukkan nama lengkap sesuai identitas</small>
+          
+          <label for="buyerAddress">Alamat Lengkap</label>
+          <textarea id="buyerAddress" placeholder="Masukkan alamat lengkap dengan kode pos" required 
+                   autocomplete="street-address" aria-describedby="address-help" rows="3"></textarea>
+          <small id="address-help" class="form-help">Sertakan detail alamat, RT/RW, kelurahan, dan kode pos</small>
+          
+          <label for="buyerPhone">Nomor Telepon</label>
+          <input type="tel" id="buyerPhone" placeholder="08123456789" required 
+                 autocomplete="tel" aria-describedby="phone-help" />
+          <small id="phone-help" class="form-help">Nomor telepon yang dapat dihubungi</small>
+  
+          <label for="paymentMethod">Metode Pembayaran:</label>
+          <select id="paymentMethod" onchange="toggleVASection()" aria-describedby="payment-help">
+            <option value="DANA">DANA</option>
+            <option value="Transfer Bank">Transfer Bank</option>
+            <option value="QRIS">QRIS</option>
+          </select>
+          <small id="payment-help" class="form-help">Pilih metode pembayaran yang tersedia</small>
+  
+          <div id="danaVA" class="payment-detail hidden">
+            <p><strong>Nomor DANA:</strong> <span id="danaVANumber">081280306674</span></p>
+            <small>Transfer ke nomor DANA di atas</small>
+          </div>
+  
+          <div id="bankSelection" class="payment-detail hidden">
+            <label for="bankType">Pilih Bank:</label>
+            <select id="bankType" onchange="showVA()">
+              <option value="BCA">BCA</option>
+              <option value="MANDIRI">MANDIRI</option>
+            </select>
+            <p><strong>Nomor Virtual Account:</strong> <span id="vaNumber">-</span></p>
+          </div>
+  
+          <div id="qrisSection" class="payment-detail hidden">
+            <p><strong>Scan QRIS berikut:</strong></p>
+            <img src="WhatsApp Image 2025-07-08 at 13.48.57_b0fd8504.jpg" 
+                 alt="QR Code untuk pembayaran QRIS" 
+                 loading="lazy" 
+                 width="200" 
+                 height="200"
+                 onerror="this.alt='Gambar QRIS tidak dapat dimuat'" />
+          </div>
+  
+          <div id="cashWarning" style="color:red; margin:10px 0;" role="alert" aria-live="assertive"></div>
+          
+          <div class="total-section">
+            <p><strong>Total Pembayaran: Rp <span id="grandTotal">0</span></strong></p>
+          </div>
+          
+          <button type="submit">Lanjutkan Pembayaran</button>
+        </form>
+      </div>
+      
+      <button type="button" onclick="backToShop()" style="background:#6c757d; margin-top:10px;">
+        ← Kembali ke Katalog
+      </button>
+    </section>
+
+    <!-- Halaman Struk -->
+    <section class="container hidden" id="receipt" aria-labelledby="receipt-heading">
+      <h2 id="receipt-heading">🧾 Struk Pembelian</h2>
+      <div class="receipt-content">
+        <div class="receipt-info">
+          <p><strong>Nama:</strong> <span id="receiptName"></span></p>
+          <p><strong>Alamat:</strong> <span id="receiptAddress"></span></p>
+          <p><strong>Telepon:</strong> <span id="receiptPhone"></span></p>
+          <p><strong>Metode Pembayaran:</strong> <span id="receiptMethod"></span></p>
+          <p><strong>Pengiriman:</strong> <span id="receiptShipping"></span></p>
+          <p><strong>Waktu Pembelian:</strong> <span id="receiptTime"></span></p>
+          <div id="receiptVA" class="hidden">
+            <p><strong>Nomor Pembayaran:</strong> <span id="receiptVANumber"></span></p>
+          </div>
+        </div>
+        
+        <div class="receipt-items">
+          <h3>Detail Pembelian</h3>
+          <div id="receiptItems"></div>
+          <div class="receipt-total">
+            <p><strong>Total Pembayaran: Rp <span id="receiptTotal">0</span></strong></p>
+          </div>
+        </div>
+      </div>
+      
+      <div class="receipt-actions">
+        <button type="button" id="btnDownload" onclick="downloadReceipt()" aria-label="Unduh struk sebagai PDF">
+          ⬇️ Unduh PDF
+        </button>
+        <button type="button" id="btnFinish" onclick="finish()" aria-label="Selesai dan kembali ke katalog">
+          ✅ Selesai
+        </button>
+      </div>
+    </section>
+  </main>
+
+  <!-- Loading Overlay -->
+  <div id="loadingOverlay" class="loading-overlay hidden" role="status" aria-label="Memproses">
+    <div class="spinner-large"></div>
+    <p>Memproses...</p>
+  </div>
+
+  <!-- Scripts -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js" defer></script>
+  <script src="script.js" defer></script>
+  
+  <!-- Service Worker Registration -->
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', function() {
+        navigator.serviceWorker.register('/sw.js')
+          .then(function(registration) {
+            console.log('SW registered: ', registration);
+          }).catch(function(registrationError) {
+            console.log('SW registration failed: ', registrationError);
+          });
+      });
+    }
+  </script>
+</body>
+</html>
