@@ -3,18 +3,28 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Katalog sepatu dengan fitur pembelian dan checkout online.">
   <title>Katalog Sepatu</title>
   <link rel="stylesheet" href="style.css" />
+  <link rel="preconnect" href="https://hmwtsbgdizxkkhcwaury.supabase.co" />
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js" defer></script>
   <script src="script.js" defer></script>
 </head>
 <body>
+  <noscript>
+    <p style="text-align:center; background:#fff3cd; padding:10px;">
+      Katalog ini memerlukan JavaScript agar dapat berjalan dengan sempurna.
+    </p>
+  </noscript>
+  
   <main>
+    <p id="messageArea" role="alert" style="text-align:center; color:red; font-weight:bold;"></p>
     <!-- Halaman Pilihan Role -->
-    <section class="login-selection fade-in" id="roleSelector">
+    <section class="login-selection fade-in" id="roleSelector" style="min-height: 200px;">
       <h1>Masuk Sebagai</h1>
-      <button aria-label=" Masuk Sebagai Pembeli" onclick="selectRole('user')">Pembeli</button>
-      <button aria-labael="Masuk Sebagai Admin" onclick="selectRole('admin')">Admin</button>
+      <p style="text-align:center; margin-bottom: 10px;">Pilih peran untuk memulai belanja di katalog sepatu kami.</p>
+      <button aria-label="Masuk Sebagai Pembeli" onclick="selectRole('user')">Pembeli</button>
+      <button aria-label="Masuk Sebagai Admin" onclick="selectRole('admin')">Admin</button>
     </section>
 
     <!-- Halaman Login Admin -->
@@ -31,7 +41,6 @@
     <!-- Halaman Admin -->
     <section class="container hidden" id="adminSection">
       <h2>Halo Admin</h2>
-  
       <h3>Tambah Produk</h3>
       <label for="newName">Nama Sepatu</label>
       <input type="text" id="newName" placeholder="Nama Sepatu" />
@@ -101,7 +110,7 @@
   
       <div id="qrisSection" class="hidden">
         <p><strong>Silakan scan QRIS berikut untuk pembayaran:</strong></p>
-        <img src="WhatsApp Image 2025-07-08 at 13.48.57_b0fd8504.jpg" alt="QRIS" alt="QRIS untuk pembayaran" loading="lazy" width="200" />
+        <img src="WhatsApp Image 2025-07-08 at 13.48.57_b0fd8504.jpg" alt="QRIS untuk pembayaran" loading="lazy" width="200" onerror="this.alt='Gambar QRIS gagal dimuat'" />
       </div>
   
       <p id="cashWarning" style="color:red;" role="alert"></p>
