@@ -73,20 +73,21 @@ function formatDateTime(date) {
 }
 
 async function fetchProducts() {
-  const res = await fetch(`${SUPABASE_URL}/rest/v1/products?select=*`, {
-    headers: {
-      apikey: SUPABASE_API_KEY,
-      Authorization: `Bearer ${SUPABASE_API_KEY}`,
-      'Cache-Control': 'no-cache'
-    }
-  });
-  if (!res.ok) throw new Error('Gagal mengambil produk');
-  products = await res.json();
-  renderProducts('productList');
-  setTimeout(updateAllSizeStocks, 500);
-} catch (err) {
-  showMessage(err.message);
-}
+  try {
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/products?select=*`, {
+      headers: {
+        apikey: SUPABASE_API_KEY,
+        Authorization: `Bearer ${SUPABASE_API_KEY}`,
+        'Cache-Control': 'no-cache'
+      }
+    });
+    if (!res.ok) throw new Error('Gagal mengambil produk');
+    products = await res.json();
+    renderProducts('productList');
+    setTimeout(updateAllSizeStocks, 500);
+  } catch (err) {
+    showMessage(err.message);
+  }
 }
 
 function renderProducts(containerId) {
