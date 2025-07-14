@@ -419,19 +419,21 @@ async function loadAdminProducts() {
 }
 
 async function loadAdminSizeStock(productId) {
-  const res = await fetch(`${SUPABASE_URL}/rest/v1/product_sizes?product_id=eq.${productId}`, {
-    headers: {
-      apikey: SUPABASE_API_KEY,
-      Authorization: `Bearer ${SUPABASE_API_KEY}`
-    }
-  });
-  const sizes = await res.json();
-  const list = document.getElementById(`sizeStock-${productId}`);
-  list.innerHTML = sizes.length
-    ? sizes.map(s => `<li>Uk ${s.size}: ${s.stock}</li>`).join('')
-    : '<li>Belum ada data ukuran</li>';
-} catch (err) {
-  showMessage('Gagal mengambil data ukuran produk');
+  try {
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/product_sizes?product_id=eq.${productId}`, {
+      headers: {
+        apikey: SUPABASE_API_KEY,
+        Authorization: `Bearer ${SUPABASE_API_KEY}`
+      }
+    });
+    const sizes = await res.json();
+    const list = document.getElementById(`sizeStock-${productId}`);
+    list.innerHTML = sizes.length
+      ? sizes.map(s => `<li>Uk ${s.size}: ${s.stock}</li>`).join('')
+      : '<li>Belum ada data ukuran</li>';
+  } catch (err) {
+    showMessage('Gagal mengambil data ukuran produk');
+  }
 }
 
 async function addProduct() {
