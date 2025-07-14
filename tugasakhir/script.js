@@ -275,7 +275,7 @@ async function checkout() {
     });
   }
 
-  savePurchaseToLocalStorage(purcahseData {
+  savePurchaseToLocalStorage({
     id: Date.now(),
     name,
     address,
