@@ -512,7 +512,7 @@ function editProduct(id, name, price, image) {
         const stock = parseInt(inputStock);
         if (!isNaN(stock)) {
           const existing = existingSizes.find(s => s.size === size);
-          const url = `${SUPABASE_URL}/rest/v1/product_sizes${existing ? `?product_id=eq.${productId}&size=eq.${size}`, : ''}`;
+          const url = `${SUPABASE_URL}/rest/v1/product_sizes${existing ? `?product_id=eq.${productId}&size=eq.${size}` : ''}`;
           const method = existing ? 'PATCH' : 'POST';
           const body = existing ? { stock } : {product_id: productId, size, stock };
           
