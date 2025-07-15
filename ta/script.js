@@ -32,9 +32,9 @@ function backToRoleMenu() {
   location.reload();
 }
 
-async function loginWithSupabase() {
-  const email = document.getElementById('adminEmail').value;
-  const password = document.getElementById('adminPassword').value;
+async function loginAdmin() {
+  const email = document.getElementById('adminUser').value;
+  const password = document.getElementById('adminPass').value;
 
   const { data, error } = await supabase.auth.signInWithPassword({
     email,
@@ -50,6 +50,7 @@ async function loginWithSupabase() {
     loadPurchaseHistory();
   }
 }
+
 
 async function logout() {
   await supabase.auth.signOut();
