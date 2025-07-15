@@ -13,21 +13,26 @@ async function fetchProduk() {
   const { data, error } = await supabase.from('products').select('*');
   if (error) return console.error(error);
 
-  produkList.innerHTML = data.map(p => `
+  produkList.innerHTML = data.map(p => {
+  const sizeOptions = [...Array(11)].map((_, i) => {
+    const size = 36 + i;
+    return `<option value="${size}">${size}</option>`;
+  }).join('');
+
+  return `
     <div class="card">
       <img src="${p.image}" alt="${p.name}" />
       <h3>${p.name}</h3>
       <p>Rp ${p.price}</p>
       <select id="size-${p.id}">
         <option value="" disabled selected>Pilih Ukuran</option>
-        ${[...Array(11)].map((_, i) => {
-          const size = 36 + i;
-          return `<option value="${size}">${size}</option>`;
-        }).join('')}
+        ${sizeOptions}
       </select>
       <button onclick="addToCart(${p.id}, '${p.name}', ${p.price})">Tambah ke Keranjang</button>
     </div>
-  `).join('');
+  `;
+}).join('');
+
 }
 fetchProduk();
 
