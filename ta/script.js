@@ -341,29 +341,48 @@ async function loadAdminProducts() {
 
   res.data.forEach(p => {
     adminList.innerHTML += `
-      <div class="product-item">
+      <div class="product-item" id="product-${p.id}">
         <img src="${p.image}" width="100%">
         <h3>${p.name}</h3>
         <p>Rp ${parseHarga(p.price).toLocaleString('id-ID')}</p>
         <button onclick="editProduct(${p.id})">Edit</button>
         <button onclick="deleteProduct(${p.id})">Hapus</button>
         <button onclick="loadAdminSizeStock(${p.id})">Stok Ukuran</button>
+        <div class="size-stock-info hidden" id="size-stock-info-${p.id}"></div>
       </div>`;
   });
 }
 
+
 async function loadAdminSizeStock(productId) {
-  const { data, error } = await client.from('product_sizes').select('*').eq('product_id', productId);
+  const section = document.getElementById(`size-stock-info-${productId}`);
+
+  // Toggle: kalau udah tampil, sembunyikan
+  if (!section.classList.contains('hidden')) {
+    section.classList.add('hidden');
+    section.innerHTML = '';
+    return;
+  }
+
+  // Ambil data dari Supabase
+  const { data, error } = await client
+    .from('product_sizes')
+    .select('*')
+    .eq('product_id', productId);
+
   if (error) {
     alert("Gagal memuat ukuran: " + error.message);
     return;
   }
 
-  const section = document.getElementById('adminSizeStock');
-  section.innerHTML = `<h3>Stok Ukuran Produk ID: ${productId}</h3>`;
-  section.innerHTML += `<ul>${data.map(d => `
-    <li>Ukuran ${d.size}: ${d.stock} pcs</li>`).join('')}</ul>`;
+  // Tampilkan
+  section.classList.remove('hidden');
+  section.innerHTML = `
+    <ul>
+      ${data.map(d => `<li>Ukuran ${d.size}: ${d.stock} pcs</li>`).join('')}
+    </ul>`;
 }
+
 
 async function uploadAndAddProduct() {
   const name = document.getElementById('newProductName').value;
