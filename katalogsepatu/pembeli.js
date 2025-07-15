@@ -18,7 +18,13 @@ async function fetchProduk() {
       <img src="${p.image}" alt="${p.name}" />
       <h3>${p.name}</h3>
       <p>Rp ${p.price}</p>
-      <input type="text" placeholder="Ukuran" id="size-${p.id}" />
+      <select id="size-${p.id}">
+        <option value="" disabled selected>Pilih Ukuran</option>
+        ${[...Array(11)].map((_, i) => {
+          const size = 36 + i;
+          return `<option value="${size}">${size}</option>`;
+        }).join('')}
+      </select>
       <button onclick="addToCart(${p.id}, '${p.name}', ${p.price})">Tambah ke Keranjang</button>
     </div>
   `).join('');
