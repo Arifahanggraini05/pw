@@ -8,7 +8,25 @@
 </head>
 <body>
   <h1>Daftar Sepatu</h1>
+  <button onclick="showCart()">Lihat Keranjang</button>
+
   <div id="produkList" class="produk-grid"></div>
-  <script type="module" src="pembeli.js"></script>
+
+  <div id="cartSection" class="hidden">
+    <h2>Keranjang Belanja</h2>
+    <div id="cartItems"></div>
+
+    <h3>Data Pembeli</h3>
+    <input type="text" id="namaPembeli" placeholder="Nama Pembeli" required />
+    <input type="text" id="alamat" placeholder="Alamat" required />
+    <input type="text" id="noHp" placeholder="No HP" required />
+    <input type="text" id="metodeBayar" placeholder="Metode Pembayaran" required />
+    <input type="text" id="metodeKirim" placeholder="Metode Pengiriman" required />
+
+    <button onclick="checkout()">Bayar & Cetak Struk</button>
+    <button onclick="backToProducts()">Kembali</button>
+  </div>
+
+  <script type="module" src="script-pembeli.js"></script>
 </body>
 </html>
