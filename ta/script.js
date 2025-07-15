@@ -33,8 +33,8 @@ function backToRoleMenu() {
 }
 
 async function loginAdmin() {
-  const email = document.getElementById('adminUser').value;
-  const password = document.getElementById('adminPass').value;
+  const email = document.getElementById('adminEmail').value;
+  const password = document.getElementById('adminPassword').value;
 
   const { data, error } = await supabase.auth.signInWithPassword({
     email,
