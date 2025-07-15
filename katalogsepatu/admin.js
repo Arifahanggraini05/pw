@@ -18,6 +18,7 @@ async function login() {
     loginSection.classList.add('hidden');
     adminSection.classList.remove('hidden');
     fetchRiwayat();
+    fetchProdukAdmin();
   } else {
     alert('Login gagal');
   }
@@ -56,17 +57,108 @@ formProduk?.addEventListener('submit', async (e) => {
 });
 
 async function fetchRiwayat() {
-  const { data, error } = await supabase.from('orders').select('*');
+  const { data, error } = await supabase.from('orders').select('*, products(name)';
   if (error) return console.error(error);
   riwayat.innerHTML = data.map(o => `
     <div class="card">
-      <p>ID Produk: ${o.product_id}</p>
+      <p><strong>Produk:</strong> ${o.products?.name || 'Tidak ditemukan'}</p>
       <p>Ukuran: ${o.size}</p>
       <p>Qty: ${o.quantity}</p>
-      <p>Tanggal: ${new Date(o.created_at).toLocaleString()}</p>
+      <p>Nama Pembeli: ${o.buyer_name}</p>
+      <p>Alamat: ${o.address}</p>
+      <p>No HP: ${o.phone}</p>
+      <p>Metode Bayar: ${o.payment_method}</p>
+      <p>Pengiriman: ${o.shipping_method}</p>
+      <p><i>${new Date(o.created_at).toLocaleString()}</i></p>
     </div>
   `).join('');
 }
+
+const produkList = document.getElementById('produkList');
+
+async function fetchProdukAdmin() {
+  const { data, error } = await supabase.from('products').select('*');
+  if (error) return console.error(error);
+
+  produkList.innerHTML = data.map(p => `
+    <div class="card">
+      <img src="${p.image}" width="100" />
+      <p><strong>${p.name}</strong></p>
+      <p>Rp ${p.price.toLocaleString()}</p>
+      <button onclick="showEditForm(${p.id}, '${p.name}', ${p.price}, '${p.image}')">Edit</button>
+      <button onclick="hapusProduk(${p.id})">Hapus</button>
+    </div>
+  `).join('');
+}
+
+window.hapusProduk = async (id) => {
+  const konfirmasi = confirm('Yakin ingin menghapus produk ini?');
+  if (!konfirmasi) return;
+
+  const { error } = await supabase.from('products').delete().eq('id', id);
+  if (error) return alert('Gagal hapus produk');
+  alert('Produk berhasil dihapus');
+  fetchProdukAdmin();
+};
+
+window.editProduk = (id, nama, harga) => {
+  const newName = prompt('Edit Nama Produk:', nama);
+  const newPrice = prompt('Edit Harga Produk:', harga);
+  if (newName && newPrice) {
+    updateProduk(id, newName, parseInt(newPrice));
+  }
+};
+
+async function updateProduk(id, name, price) {
+  const { error } = await supabase.from('products').update({ name, price }).eq('id', id);
+  if (error) return alert('Gagal update produk');
+  alert('Produk berhasil diupdate');
+  fetchProdukAdmin();
+}
+
+const editForm = document.getElementById('editForm');
+
+window.showEditForm = (id, name, price, image) => {
+  document.getElementById('editId').value = id;
+  document.getElementById('editNama').value = name;
+  document.getElementById('editHarga').value = price;
+  editForm.classList.remove('hidden');
+};
+
+window.cancelEdit = () => {
+  editForm.classList.add('hidden');
+};
+
+window.submitEdit = async () => {
+  const id = document.getElementById('editId').value;
+  const name = document.getElementById('editNama').value;
+  const price = parseInt(document.getElementById('editHarga').value);
+  const file = document.getElementById('editGambar').files[0];
+
+  let imageUrl = null;
+
+  // Jika admin upload gambar baru
+  if (file) {
+    const fileName = `${Date.now()}.${file.name.split('.').pop()}`;
+    const { error: uploadError } = await supabase.storage.from('images').upload(fileName, file);
+    if (uploadError) return alert('Upload gambar baru gagal');
+
+    const { data: imageData } = supabase.storage.from('images').getPublicUrl(fileName);
+    imageUrl = imageData.publicUrl;
+  }
+
+  const updateData = imageUrl ? { name, price, image: imageUrl } : { name, price };
+
+  const { error } = await supabase.from('products').update(updateData).eq('id', id);
+  if (error) return alert('Gagal update produk');
+
+  alert('Produk berhasil diupdate');
+  editForm.classList.add('hidden');
+  fetchProdukAdmin();
+};
+
+
+
 
 (async () => {
   const { data: { session } } = await supabase.auth.getSession();
