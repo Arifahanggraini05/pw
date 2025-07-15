@@ -22,8 +22,28 @@
     <input type="text" id="namaPembeli" placeholder="Nama Pembeli" required />
     <input type="text" id="alamat" placeholder="Alamat" required />
     <input type="text" id="noHp" placeholder="No HP" required />
-    <input type="text" id="metodeBayar" placeholder="Metode Pembayaran" required />
-    <input type="text" id="metodeKirim" placeholder="Metode Pengiriman" required />
+    <select id="metodeBayar" onchange="toggleBankDropdown()">
+      <option value="" disabled selected>Pilih Metode Pembayaran</option>
+      <option value="transfer">Transfer Bank</option>
+      <option value="dana">DANA</option>
+      <option value="qris">QRIS</option>
+    </select>
+  
+    <div id="bankDropdown" class="hidden">
+      <select id="bank">
+        <option value="" disabled selected>Pilih Bank</option>
+        <option value="BCA">BCA</option>
+        <option value="BNI">BNI</option>
+        <option value="Mandiri">Mandiri</option>
+      </select>
+    </div>
+
+    <select id="metodeKirim">
+      <option value="" disabled selected>Pilih Metode Pengiriman</option>
+      <option value="reguler">Reguler (5-6 hari) - Rp10.000</option>
+      <option value="express">Express (2-3 hari) - Rp20.000</option>
+    </select>
+
 
     <button onclick="checkout()">Bayar & Cetak Struk</button>
     <button onclick="printReceipt()">Cetak Struk (PDF)</button>
