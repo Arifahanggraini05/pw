@@ -1,7 +1,9 @@
 // [script.js]
-
+import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
 const SUPABASE_URL = 'https://hmwtsbgdizxkkhcwaury.supabase.co';
 const SUPABASE_API_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imhtd3RzYmdkaXp4a2toY3dhdXJ5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDk1MjcyMzksImV4cCI6MjA2NTEwMzIzOX0.BSq6ScSU9zQ8UywyM5Z3RrSvcYKzpGmxUjA_xKYsAVY';
+
+const supabase = createClient(SUPABASE_URL, SUPABASE_API_KEY);
 
 let products = [], cart = [];
 let shippingCost = 15000;
@@ -30,22 +32,30 @@ function backToRoleMenu() {
   location.reload();
 }
 
-function loginAdmin() {
-  const user = document.getElementById('adminUser').value;
-  const pass = document.getElementById('adminPass').value;
-  if (user === 'admin@example.com' && pass === '123') {
+async function loginWithSupabase() {
+  const email = document.getElementById('adminEmail').value;
+  const password = document.getElementById('adminPassword').value;
+
+  const { data, error } = await supabase.auth.signInWithPassword({
+    email,
+    password
+  });
+
+  if (error) {
+    document.getElementById('adminLoginMsg').innerText = 'Login gagal: ' + error.message;
+  } else {
     document.getElementById('adminLogin').classList.add('hidden');
     document.getElementById('adminSection').classList.remove('hidden');
     loadAdminProducts();
     loadPurchaseHistory();
-  } else {
-    document.getElementById('adminLoginMsg').innerText = 'Login gagal';
   }
 }
 
-function logout() {
+async function logout() {
+  await supabase.auth.signOut();
   location.reload();
 }
+
 
 function parseHarga(value) {
   return typeof value === 'string' ? parseInt(value.replace(/\./g, '').replace(/,/g, '')) || 0 : value;
