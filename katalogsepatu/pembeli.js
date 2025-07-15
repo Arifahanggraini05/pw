@@ -91,3 +91,56 @@ window.checkout = async () => {
   localStorage.removeItem('cart');
   location.reload();
 };
+
+window.printReceipt = async () => {
+  const cart = JSON.parse(localStorage.getItem('cart')) || [];
+  if (cart.length === 0) return alert('Keranjang kosong');
+
+  const nama = document.getElementById('namaPembeli').value;
+  const alamat = document.getElementById('alamat').value;
+  const noHp = document.getElementById('noHp').value;
+  const metodeBayar = document.getElementById('metodeBayar').value;
+  const metodeKirim = document.getElementById('metodeKirim').value;
+
+  if (!nama || !alamat || !noHp || !metodeBayar || !metodeKirim) {
+    return alert('Isi lengkap data pembeli terlebih dahulu');
+  }
+
+  // Buat isi struk
+  let html = `
+    <p><strong>Nama:</strong> ${nama}</p>
+    <p><strong>Alamat:</strong> ${alamat}</p>
+    <p><strong>No HP:</strong> ${noHp}</p>
+    <p><strong>Pembayaran:</strong> ${metodeBayar}</p>
+    <p><strong>Pengiriman:</strong> ${metodeKirim}</p>
+    <h3>Detail Barang</h3>
+    <ul>
+  `;
+  cart.forEach(item => {
+    html += `<li>${item.name} - Size ${item.size} - Rp ${item.price}</li>`;
+  });
+  html += '</ul>';
+
+  const receiptContent = document.getElementById('receiptContent');
+  receiptContent.innerHTML = html;
+
+  // Tampilkan struk sementara
+  const receipt = document.getElementById('receipt');
+  receipt.classList.remove('hidden');
+
+  // Cetak ke PDF
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF();
+
+  await html2canvas(receipt).then(canvas => {
+    const imgData = canvas.toDataURL('image/png');
+    const imgProps = doc.getImageProperties(imgData);
+    const pdfWidth = doc.internal.pageSize.getWidth();
+    const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
+    doc.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+    doc.save(`struk_${Date.now()}.pdf`);
+  });
+
+  // Sembunyikan kembali
+  receipt.classList.add('hidden');
+};
