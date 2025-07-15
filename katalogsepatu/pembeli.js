@@ -144,3 +144,12 @@ window.printReceipt = async () => {
   // Sembunyikan kembali
   receipt.classList.add('hidden');
 };
+
+// Saat halaman dimuat, cek apakah ada keranjang
+window.addEventListener('DOMContentLoaded', () => {
+  const cart = JSON.parse(localStorage.getItem('cart')) || [];
+  if (cart.length > 0) {
+    showCart();
+  }
+});
+
