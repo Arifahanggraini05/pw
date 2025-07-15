@@ -1,21 +1,4 @@
 // [script.js]
-const supabase = supabase.createClient('https://lmmiuxgdypnpjdvffxdi.supabase.co', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxtbWl1eGdkeXBucGpkdmZmeGRpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDk1MjgyMjQsImV4cCI6MjA2NTEwNDIyNH0.aXRzfjm9uZw5gTHPgs7ZxyB4RQhNposr5AwRi1dofjU');
-const SUPABASE_URL = ;
-const SUPABASE_API_KEY = 
-
-let products = [], cart = [];
-let shippingCost = 15000;
-let shippingMethod = 'Reguler (5-6 hari)';
-const virtualAccounts = {
-  BCA: '4061723352',
-  MANDIRI: '1330027199868',
-  DANA: '081280306674'
-};
-
-window.onload = () => {
-  document.getElementById('roleSelector').classList.remove('hidden');
-};
-
 function selectRole(role) {
   // Sembunyikan semua section terlebih dahulu
   document.querySelectorAll('.container, .login-form').forEach(el => {
@@ -37,6 +20,47 @@ function selectRole(role) {
 function backToRoleMenu() {
   location.reload();
 }
+document.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('roleSelector').querySelectorAll('button').forEach(btn => {
+    btn.addEventListener('click', function() {
+      const role = this.textContent === 'Pembeli' ? 'user' : 'admin';
+      selectRole(role);
+      initializeRoleButtons();
+    });
+  });
+});
+
+function initializeRoleButtons() {
+  const roleSelector = document.getElementById('roleSelector');
+  if (roleSelector) {
+    roleSelector.querySelectorAll('button').forEach(btn => {
+      btn.addEventListener('click', function() {
+        const role = this.textContent === 'Pembeli' ? 'user' : 'admin';
+        selectRole(role);
+      });
+    });
+  }
+}
+
+
+const supabase = supabase.createClient('https://lmmiuxgdypnpjdvffxdi.supabase.co', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxtbWl1eGdkeXBucGpkdmZmeGRpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDk1MjgyMjQsImV4cCI6MjA2NTEwNDIyNH0.aXRzfjm9uZw5gTHPgs7ZxyB4RQhNposr5AwRi1dofjU');
+const SUPABASE_URL = ;
+const SUPABASE_API_KEY = 
+
+let products = [], cart = [];
+let shippingCost = 15000;
+let shippingMethod = 'Reguler (5-6 hari)';
+const virtualAccounts = {
+  BCA: '4061723352',
+  MANDIRI: '1330027199868',
+  DANA: '081280306674'
+};
+
+window.onload = () => {
+  document.getElementById('roleSelector').classList.remove('hidden');
+};
+
+
 
 function loginAdmin() {
   const user = document.getElementById('adminUser').value;
