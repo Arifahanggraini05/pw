@@ -222,7 +222,7 @@ window.toggleBankDropdown = () => {
     vaInfo.innerHTML = `<p><strong>No VA DANA:</strong> 081280306674</p>`;
   } else if (metode === 'qris') {
     qrImage.classList.remove('hidden');
-    qrCode.src = 'qr-code.png'; 
+    qrCode.src = 'qr-code.jpg'; 
   }
 };
 
