@@ -136,7 +136,7 @@ window.printReceipt = async () => {
     <p><strong>Nama:</strong> ${nama}</p>
     <p><strong>Alamat:</strong> ${alamat}</p>
     <p><strong>No HP:</strong> ${noHp}</p>
-    <p><strong>Pembayaran:</strong> ${metodeBayar}</p>
+    <p><strong>Pembayaran:</strong> ${metodeBayar === 'transfer' ? 'Transfer Bank - ${bank} : metodeBayar.toUpperCase()</p>
     <p><strong>Pengiriman:</strong> ${metodeKirim}</p>
     <h3>Detail Barang</h3>
     <ul>
