@@ -149,7 +149,7 @@ window.printReceipt = async () => {
 window.addEventListener('DOMContentLoaded', () => {
   const cart = JSON.parse(localStorage.getItem('cart')) || [];
   if (cart.length > 0) {
-    showCart();
+    //showCart();
   }
 });
 
