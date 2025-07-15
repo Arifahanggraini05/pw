@@ -33,14 +33,29 @@ fetchProduk();
 
 // Tambah ke keranjang
 window.addToCart = (id, name, price) => {
-  const size = document.getElementById(`size-${id}`).value;
-  if (!size) return alert('Isi ukuran dulu');
+  const sizeElement = document.getElementById(`size-${id}`);
+  const size = sizeElement.value;
+
+  if (!size) {
+    alert('Silakan pilih ukuran terlebih dahulu.');
+    sizeElement.focus();
+    return;
+  }
 
   let cart = JSON.parse(localStorage.getItem('cart')) || [];
-  cart.push({ id, name, price, size, qty: 1 });
+
+  // Cek apakah produk dengan ukuran sama sudah ada
+  const existingItem = cart.find(item => item.id === id && item.size === size);
+  if (existingItem) {
+    existingItem.qty += 1;
+  } else {
+    cart.push({ id, name, price, size, qty: 1 });
+  }
+
   localStorage.setItem('cart', JSON.stringify(cart));
-  alert('Ditambahkan ke keranjang!');
+  alert(`Sepatu ukuran ${size} berhasil ditambahkan ke keranjang!`);
 };
+
 
 // Tampilkan isi keranjang
 window.showCart = () => {
