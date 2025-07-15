@@ -1,7 +1,7 @@
 // [script.js]
 import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
-const SUPABASE_URL = 'https://hmwtsbgdizxkkhcwaury.supabase.co';
-const SUPABASE_API_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imhtd3RzYmdkaXp4a2toY3dhdXJ5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDk1MjcyMzksImV4cCI6MjA2NTEwMzIzOX0.BSq6ScSU9zQ8UywyM5Z3RrSvcYKzpGmxUjA_xKYsAVY';
+const SUPABASE_URL = 'https://lmmiuxgdypnpjdvffxdi.supabase.co';
+const SUPABASE_API_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxtbWl1eGdkeXBucGpkdmZmeGRpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDk1MjgyMjQsImV4cCI6MjA2NTEwNDIyNH0.aXRzfjm9uZw5gTHPgs7ZxyB4RQhNposr5AwRi1dofjU';
 
 const supabase = createClient(SUPABASE_URL, SUPABASE_API_KEY);
 
@@ -414,13 +414,32 @@ async function loadAdminSizeStock(productId) {
     : '<li>Belum ada data ukuran</li>';
 }
 
-async function addProduct() {
+async function uploadAndAddProduct() {
   const name = document.getElementById('newName').value;
   const price = parseInt(document.getElementById('newPrice').value);
-  const image = document.getElementById('newImage').value;
+  const imageFile = document.getElementById('newImage').files[0];
 
-  if (!name || !price || !image) return alert("Isi semua field!");
+  if (!name || !price || !imageFile) return alert("Isi semua field!");
 
+  const fileExt = imageFile.name.split('.').pop();
+  const fileName = `${Date.now()}.${fileExt}`;
+  const filePath = `products/${fileName}`;
+
+  // Upload gambar ke Supabase Storage
+  const { data: uploaded, error: uploadError } = await supabase
+    .storage.from('product-images') // pastikan bucket ini sudah dibuat di Supabase
+    .upload(filePath, imageFile);
+
+  if (uploadError) {
+    console.error(uploadError);
+    return alert("Gagal upload gambar!");
+  }
+
+  const { data: { publicUrl } } = supabase
+    .storage.from('product-images')
+    .getPublicUrl(filePath);
+
+  // Simpan data produk
   const res = await fetch(`${SUPABASE_URL}/rest/v1/products`, {
     method: 'POST',
     headers: {
@@ -428,7 +447,7 @@ async function addProduct() {
       Authorization: `Bearer ${SUPABASE_API_KEY}`,
       'Content-Type': 'application/json'
     },
-    body: JSON.stringify({ name, price, image })
+    body: JSON.stringify({ name, price, image: publicUrl })
   });
 
   if (res.ok) {
