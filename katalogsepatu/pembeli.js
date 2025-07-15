@@ -5,7 +5,10 @@ const supabase = createClient(
 );
 
 const produkList = document.getElementById('produkList');
+const cartSection = document.getElementById('cartSection');
+const cartItems = document.getElementById('cartItems');
 
+// Tampilkan produk
 async function fetchProduk() {
   const { data, error } = await supabase.from('products').select('*');
   if (error) return console.error(error);
@@ -22,6 +25,7 @@ async function fetchProduk() {
 }
 fetchProduk();
 
+// Tambah ke keranjang
 window.addToCart = (id, name, price) => {
   const size = document.getElementById(`size-${id}`).value;
   if (!size) return alert('Isi ukuran dulu');
@@ -30,4 +34,60 @@ window.addToCart = (id, name, price) => {
   cart.push({ id, name, price, size, qty: 1 });
   localStorage.setItem('cart', JSON.stringify(cart));
   alert('Ditambahkan ke keranjang!');
+};
+
+// Tampilkan isi keranjang
+window.showCart = () => {
+  const cart = JSON.parse(localStorage.getItem('cart')) || [];
+  if (cart.length === 0) return alert('Keranjang kosong');
+
+  produkList.classList.add('hidden');
+  cartSection.classList.remove('hidden');
+
+  cartItems.innerHTML = cart.map(item => `
+    <div class="card">
+      <h3>${item.name}</h3>
+      <p>Ukuran: ${item.size}</p>
+      <p>Harga: Rp ${item.price}</p>
+    </div>
+  `).join('');
+};
+
+// Kembali ke halaman produk
+window.backToProducts = () => {
+  cartSection.classList.add('hidden');
+  produkList.classList.remove('hidden');
+};
+
+// Checkout & Simpan ke Supabase
+window.checkout = async () => {
+  const nama = document.getElementById('namaPembeli').value;
+  const alamat = document.getElementById('alamat').value;
+  const noHp = document.getElementById('noHp').value;
+  const metodeBayar = document.getElementById('metodeBayar').value;
+  const metodeKirim = document.getElementById('metodeKirim').value;
+  const cart = JSON.parse(localStorage.getItem('cart')) || [];
+
+  if (!nama || !alamat || !noHp || !metodeBayar || !metodeKirim) {
+    return alert('Isi semua data pembeli');
+  }
+
+  for (const item of cart) {
+    await supabase.from('orders').insert({
+      product_id: item.id,
+      size: item.size,
+      quantity: item.qty,
+      buyer_name: nama,
+      address: alamat,
+      phone: noHp,
+      payment_method: metodeBayar,
+      shipping_method: metodeKirim,
+    });
+  }
+
+  alert('Transaksi berhasil!\nStruk sudah dicetak di konsol browser.');
+  console.log({ nama, alamat, noHp, metodeBayar, metodeKirim, cart });
+
+  localStorage.removeItem('cart');
+  location.reload();
 };
