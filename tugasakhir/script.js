@@ -17,13 +17,21 @@ window.onload = () => {
 };
 
 function selectRole(role) {
-  document.getElementById('roleSelector').classList.add('hidden');
+  // Sembunyikan semua section terlebih dahulu
+  document.querySelectorAll('.container, .login-form').forEach(el => {
+    el.classList.add('hidden');
+  });
+  
+  // Tampilkan section sesuai role
   if (role === 'user') {
     document.getElementById('userSection').classList.remove('hidden');
-    fetchProducts();
-  } else {
+    fetchProducts(); // Load produk untuk user
+  } else if (role === 'admin') {
     document.getElementById('adminLogin').classList.remove('hidden');
   }
+  
+  // Sembunyikan role selector
+  document.getElementById('roleSelector').classList.add('hidden');
 }
 
 function backToRoleMenu() {
