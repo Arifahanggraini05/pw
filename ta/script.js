@@ -77,6 +77,10 @@ async function fetchProducts() {
 
 function renderProducts(containerId) {
   const list = document.getElementById('containerId');
+  if(!list) {
+    console.warn(`Elemen dengan id '${containerId}' tidak ditemukan.`);
+    return;
+  }
   list.innerHTML = '';
   products.forEach((p, i) => {
     list.innerHTML += `
