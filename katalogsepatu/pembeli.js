@@ -124,6 +124,7 @@ window.printReceipt = async () => {
   const nama = document.getElementById('namaPembeli').value;
   const alamat = document.getElementById('alamat').value;
   const noHp = document.getElementById('noHp').value;
+  const metodeBayar = document.getElementById('metodeBayar').value;
   const bank = document.getElementById('bank')?.value || '';
   const metodeKirim = document.getElementById('metodeKirim').value;
 
@@ -131,29 +132,56 @@ window.printReceipt = async () => {
     return alert('Isi lengkap data pembeli terlebih dahulu');
   }
 
+  if (metodeBayar === 'transfer' && !bank) {
+    return alert('Pilih bank jika menggunakan metode Transfer Bank');
+  }
+
+  // Hitung total harga produk
+  let subtotal = cart.reduce((sum, item) => sum + item.price * item.qty, 0);
+
+  // Tentukan ongkir berdasarkan metode kirim
+  let ongkir = 0;
+  let metodeKirimLabel = "";
+  if (metodeKirim === "reguler") {
+    ongkir = 10000;
+    metodeKirimLabel = "Reguler (5-6 hari)";
+  } else if (metodeKirim === "express") {
+    ongkir = 20000;
+    metodeKirimLabel = "Express (2-3 hari)";
+  }
+
+  const total = subtotal + ongkir;
+
   // Buat isi struk
   let html = `
     <p><strong>Nama:</strong> ${nama}</p>
     <p><strong>Alamat:</strong> ${alamat}</p>
     <p><strong>No HP:</strong> ${noHp}</p>
-    <p><strong>Pembayaran:</strong> ${metodeBayar === 'transfer' ? 'Transfer Bank - ${bank} : metodeBayar.toUpperCase()</p>
-    <p><strong>Pengiriman:</strong> ${metodeKirim}</p>
+    <p><strong>Pembayaran:</strong> ${
+      metodeBayar === 'transfer' ? `Transfer Bank - ${bank}` : metodeBayar.toUpperCase()
+    }</p>
+    <p><strong>Pengiriman:</strong> ${metodeKirimLabel} - Rp ${ongkir.toLocaleString()}</p>
     <h3>Detail Barang</h3>
     <ul>
   `;
+
   cart.forEach(item => {
-    html += `<li>${item.name} - Size ${item.size} - Rp ${item.price}</li>`;
+    html += `<li>${item.name} - Size ${item.size} - Rp ${item.price.toLocaleString()}</li>`;
   });
-  html += '</ul>';
+
+  html += `
+    </ul>
+    <p><strong>Subtotal:</strong> Rp ${subtotal.toLocaleString()}</p>
+    <p><strong>Ongkir:</strong> Rp ${ongkir.toLocaleString()}</p>
+    <p><strong>Total Bayar:</strong> Rp ${total.toLocaleString()}</p>
+  `;
 
   const receiptContent = document.getElementById('receiptContent');
   receiptContent.innerHTML = html;
 
-  // Tampilkan struk sementara
   const receipt = document.getElementById('receipt');
   receipt.classList.remove('hidden');
 
-  // Cetak ke PDF
   const { jsPDF } = window.jspdf;
   const doc = new jsPDF();
 
@@ -166,7 +194,6 @@ window.printReceipt = async () => {
     doc.save(`struk_${Date.now()}.pdf`);
   });
 
-  // Sembunyikan kembali
   receipt.classList.add('hidden');
 };
 
