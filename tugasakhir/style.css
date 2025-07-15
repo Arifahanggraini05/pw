@@ -9,20 +9,20 @@ body {
   background: linear-gradient(to right, #f5f7fa, #c3cfe2);
   color: #2c3e50;
   padding: 20px;
-  line-height: 1.6;
 }
 
 /* Heading */
-h1, h2, h3 {
-  font-weight: 800;
-  color: #273c75;
-  margin-bottom: 25px;
+h2 {
   text-align: center;
+  margin-bottom: 25px;
+  font-size: 30px;
+  color: #273c75;
+  font-weight: 800;
 }
 
 /* Hidden Elements */
 .hidden {
-  display: none !important;
+  display: none;
 }
 
 /* Container Utama */
@@ -101,7 +101,7 @@ input, select, textarea {
   font-size: 15px;
   border-radius: 10px;
   border: 1px solid #ccc;
-  transition: border-color 0.3s ease;
+  transition: 0.3s ease;
 }
 input:focus, select:focus, textarea:focus {
   border-color: #00a8ff;
@@ -270,10 +270,3 @@ input:focus, select:focus, textarea:focus {
   from { opacity: 0; transform: translateY(15px); }
   to { opacity: 1; transform: translateY(0); }
 }
-
-[role="alert"] {
-  font-weight: bold;
-  color: #e84118;
-}
-
-
