@@ -4,6 +4,10 @@
   margin: 0;
   padding: 0;
 }
+#roleSelector {
+  display: block;
+  opacity: 1;
+}
 body {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   background: linear-gradient(to right, #f5f7fa, #c3cfe2);
@@ -22,7 +26,7 @@ h2 {
 
 /* Hidden Elements */
 .hidden {
-  display: none;
+  display: none !important;
 }
 
 /* Container Utama */
