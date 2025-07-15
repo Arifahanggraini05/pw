@@ -53,8 +53,28 @@ formProduk?.addEventListener('submit', async (e) => {
 });
 
 async function fetchRiwayat() {
-  const { data, error } = await supabase.from('orders').select('*, products(name)');
-  if (error) return console.error(error);
+  const { data, error } = await supabase
+    .from('orders')
+    .select(`
+      id,
+      product_id,
+      size,
+      quantity,
+      buyer_name,
+      address,
+      phone,
+      payment_method,
+      shipping_method,
+      created_at,
+      products(name)
+    `);
+
+  if (error) return console.error('Gagal ambil riwayat:', error);
+
+  if (data.length === 0) {
+    riwayat.innerHTML = '<p>Tidak ada data pembelian.</p>';
+    return;
+  }
 
   riwayat.innerHTML = data.map(o => `
     <div class="card">
