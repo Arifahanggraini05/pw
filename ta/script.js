@@ -76,7 +76,7 @@ async function fetchProducts() {
 }
 
 function renderProducts(containerId) {
-  const list = document.getElementById('purchaseHistory');
+  const list = document.getElementById('containerId');
   list.innerHTML = '';
   products.forEach((p, i) => {
     list.innerHTML += `
