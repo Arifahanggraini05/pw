@@ -1,9 +1,7 @@
-// [script.js]
-
 const SUPABASE_URL = 'https://lmmiuxgdypnpjdvffxdi.supabase.co';
 const SUPABASE_API_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxtbWl1eGdkeXBucGpkdmZmeGRpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDk1MjgyMjQsImV4cCI6MjA2NTEwNDIyNH0.aXRzfjm9uZw5gTHPgs7ZxyB4RQhNposr5AwRi1dofjU';
 
-const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_API_KEY);
+const client = supabase.createClient(SUPABASE_URL, SUPABASE_API_KEY);
 
 let products = [], cart = [];
 let shippingCost = 15000;
@@ -36,10 +34,7 @@ async function loginAdmin() {
   const email = document.getElementById('adminEmail').value;
   const password = document.getElementById('adminPassword').value;
 
-  const { data, error } = await supabase.auth.signInWithPassword({
-    email,
-    password
-  });
+  const { data, error } = await client.auth.signInWithPassword({ email, password });
 
   if (error) {
     document.getElementById('adminLoginMsg').innerText = 'Login gagal: ' + error.message;
@@ -51,12 +46,10 @@ async function loginAdmin() {
   }
 }
 
-
 async function logout() {
-  await supabase.auth.signOut();
+  await client.auth.signOut();
   location.reload();
 }
-
 
 function parseHarga(value) {
   return typeof value === 'string' ? parseInt(value.replace(/\./g, '').replace(/,/g, '')) || 0 : value;
@@ -293,279 +286,149 @@ async function checkout() {
   document.getElementById('cartSection').classList.add('hidden');
   document.getElementById('receipt').classList.remove('hidden');
 
-  // ✅ Notifikasi berhasil
   alert("🎉 Pembelian berhasil! Terima kasih telah berbelanja.");
 
   cart = [];
 }
 
 function downloadReceipt() {
-  const element = document.getElementById('receipt');
-  document.getElementById('btnDownload').style.display = 'none';
-  document.getElementById('btnFinish').style.display = 'none';
-
-  setTimeout(() => {
-    html2pdf().set({
-      margin: 0.5,
-      filename: `struk_${new Date().toISOString().split('T')[0]}.pdf`,
-      image: { type: 'jpeg', quality: 0.98 },
-      html2canvas: { scale: 2 },
-      jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
-    }).from(element).save().then(() => {
-      document.getElementById('btnDownload').style.display = 'inline-block';
-      document.getElementById('btnFinish').style.display = 'inline-block';
-    });
-  }, 200);
+  const receipt = document.getElementById('receipt').innerText;
+  const blob = new Blob([receipt], { type: 'text/plain' });
+  const link = document.createElement('a');
+  link.href = URL.createObjectURL(blob);
+  link.download = 'struk_pembelian.txt';
+  link.click();
 }
 
 function finish() {
   document.getElementById('receipt').classList.add('hidden');
   document.getElementById('userSection').classList.remove('hidden');
+  fetchProducts();
 }
 
-function savePurchaseToLocalStorage(purchaseData) {
-  let history = JSON.parse(localStorage.getItem('purchaseHistory')) || [];
-  history.push(purchaseData);
+function savePurchaseToLocalStorage(data) {
+  const history = JSON.parse(localStorage.getItem('purchaseHistory') || '[]');
+  history.push(data);
   localStorage.setItem('purchaseHistory', JSON.stringify(history));
 }
 
 function loadPurchaseHistory() {
-  const container = document.getElementById('purchaseHistory');
-  const history = JSON.parse(localStorage.getItem('purchaseHistory')) || [];
-  if (!history.length) {
-    container.innerHTML = '<p>Belum ada riwayat pembelian.</p>';
-    return;
-  }
-
-  container.innerHTML = history.map(p => `
-    <div class="history-item" id="history-${p.id}">
-      <p><strong>Nama:</strong> ${p.name}</p>
-      <p><strong>Telepon:</strong> ${p.phone}</p>
-      <p><strong>Alamat:</strong> ${p.address}</p>
-      <p><strong>Waktu:</strong> ${formatDateTime(p.time)}</p>
-      <p><strong>Pengiriman:</strong> ${p.shipping}</p>
-      <p><strong>Nama Sepatu:</strong></p>
-      <ul>
-        ${p.items.map(i => `<li>${i.name} (Uk ${i.size}) - Rp ${parseHarga(i.price).toLocaleString('id-ID')}</li>`).join('')}
-      </ul>
-      <p>Total: Rp ${parseHarga(p.total).toLocaleString('id-ID')}</p>
-      <button onclick="deletePurchaseHistory(${p.id})">🗑️ Hapus Riwayat Ini</button>
-    </div>
-  `).join('');
+  const history = JSON.parse(localStorage.getItem('purchaseHistory') || '[]');
+  const list = document.getElementById('purchaseHistoryList');
+  list.innerHTML = '';
+  history.forEach(entry => {
+    list.innerHTML += `
+      <div class="history-item">
+        <strong>${entry.name}</strong> - ${formatDateTime(entry.time)}<br/>
+        Total: Rp ${entry.total.toLocaleString('id-ID')}
+        <ul>${entry.items.map(i => `<li>${i.name} (Uk ${i.size}) - Rp ${parseHarga(i.price).toLocaleString('id-ID')}</li>`).join('')}</ul>
+        <hr/>
+      </div>`;
+  });
 }
 
-function deletePurchaseHistory(id) {
-  let history = JSON.parse(localStorage.getItem('purchaseHistory')) || [];
-  history = history.filter(p => p.id !== id);
-  localStorage.setItem('purchaseHistory', JSON.stringify(history));
-  loadPurchaseHistory();
+function deletePurchaseHistory() {
+  if (confirm("Hapus semua riwayat pembelian?")) {
+    localStorage.removeItem('purchaseHistory');
+    loadPurchaseHistory();
+  }
 }
 
 async function loadAdminProducts() {
-  const res = await fetch(`${SUPABASE_URL}/rest/v1/products?select=*`, {
-    headers: {
-      apikey: SUPABASE_API_KEY,
-      Authorization: `Bearer ${SUPABASE_API_KEY}`,
-      'Cache-Control': 'no-cache'
-    }
+  const res = await client.from('products').select('*');
+  const adminList = document.getElementById('adminProductList');
+  adminList.innerHTML = '';
+
+  res.data.forEach(p => {
+    adminList.innerHTML += `
+      <div class="product-item">
+        <img src="${p.image}" width="100%">
+        <h3>${p.name}</h3>
+        <p>Rp ${parseHarga(p.price).toLocaleString('id-ID')}</p>
+        <button onclick="editProduct(${p.id})">Edit</button>
+        <button onclick="deleteProduct(${p.id})">Hapus</button>
+        <button onclick="loadAdminSizeStock(${p.id})">Stok Ukuran</button>
+      </div>`;
   });
-  const data = await res.json();
-  const container = document.getElementById('adminProductList');
-  container.innerHTML = '';
-
-  if (!data.length) {
-    container.innerHTML = '<p>Belum ada produk.</p>';
-    return;
-  }
-
-  const grid = document.createElement('div');
-  grid.className = 'product-grid';
-
-  data.forEach(p => {
-    const item = document.createElement('div');
-    item.className = 'product-item';
-    item.innerHTML = `
-      <img src="${p.image}?v=${Math.random()}" alt="${p.name}">
-      <h3>${p.name}</h3>
-      <p>Rp ${parseHarga(p.price).toLocaleString('id-ID')}</p>
-      <p><strong>Stok per Ukuran:</strong></p>
-      <ul id="sizeStock-${p.id}"><li>Loading...</li></ul>
-      <button onclick="editProduct(${p.id}, '${p.name}', ${parseHarga(p.price)}, '${p.image}')">✏️ Edit</button>
-      <button onclick="deleteProduct(${p.id})">🗑️ Hapus</button>
-    `;
-    grid.appendChild(item);
-  });
-
-  container.appendChild(grid);
-  products = data;
-  data.forEach(p => loadAdminSizeStock(p.id));
 }
 
 async function loadAdminSizeStock(productId) {
-  const res = await fetch(`${SUPABASE_URL}/rest/v1/product_sizes?product_id=eq.${productId}`, {
-    headers: {
-      apikey: SUPABASE_API_KEY,
-      Authorization: `Bearer ${SUPABASE_API_KEY}`
-    }
-  });
-  const sizes = await res.json();
-  const list = document.getElementById(`sizeStock-${productId}`);
-  list.innerHTML = sizes.length
-    ? sizes.map(s => `<li>Uk ${s.size}: ${s.stock}</li>`).join('')
-    : '<li>Belum ada data ukuran</li>';
+  const { data, error } = await client.from('product_sizes').select('*').eq('product_id', productId);
+  if (error) {
+    alert("Gagal memuat ukuran: " + error.message);
+    return;
+  }
+
+  const section = document.getElementById('adminSizeStock');
+  section.innerHTML = `<h3>Stok Ukuran Produk ID: ${productId}</h3>`;
+  section.innerHTML += `<ul>${data.map(d => `
+    <li>Ukuran ${d.size}: ${d.stock} pcs</li>`).join('')}</ul>`;
 }
 
 async function uploadAndAddProduct() {
-  const name = document.getElementById('newName').value;
-  const price = parseInt(document.getElementById('newPrice').value);
-  const imageFile = document.getElementById('newImage').files[0];
+  const name = document.getElementById('newProductName').value;
+  const price = parseHarga(document.getElementById('newProductPrice').value);
+  const imageFile = document.getElementById('newProductImage').files[0];
+  const sizes = [36, 37, 38, 39, 40, 41, 42, 43];
 
-  if (!name || !price || !imageFile) return alert("Isi semua field!");
+  if (!name || !price || !imageFile) return alert("Isi semua data produk!");
 
   const fileExt = imageFile.name.split('.').pop();
   const fileName = `${Date.now()}.${fileExt}`;
-  const filePath = `products/${fileName}`;
-
-  // Upload gambar ke Supabase Storage
-  const { data: uploaded, error: uploadError } = await supabase
-    .storage.from('product-images') // pastikan bucket ini sudah dibuat di Supabase
-    .upload(filePath, imageFile);
+  const { error: uploadError } = await client.storage.from('images').upload(fileName, imageFile);
 
   if (uploadError) {
-    console.error(uploadError);
-    return alert("Gagal upload gambar!");
+    alert("Gagal upload gambar: " + uploadError.message);
+    return;
   }
 
-  const { data: { publicUrl } } = supabase
-    .storage.from('product-images')
-    .getPublicUrl(filePath);
+  const { data: publicUrlData } = client.storage.from('images').getPublicUrl(fileName);
+  const imageUrl = publicUrlData.publicUrl;
 
-  // Simpan data produk
-  const res = await fetch(`${SUPABASE_URL}/rest/v1/products`, {
-    method: 'POST',
-    headers: {
-      apikey: SUPABASE_API_KEY,
-      Authorization: `Bearer ${SUPABASE_API_KEY}`,
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({ name, price, image: publicUrl })
-  });
+  const { data: inserted, error } = await client.from('products').insert({
+    name,
+    price,
+    image: imageUrl
+  }).select();
 
-  if (res.ok) {
-    alert("Produk ditambahkan!");
-    document.getElementById('newName').value = '';
-    document.getElementById('newPrice').value = '';
-    document.getElementById('newImage').value = '';
-    loadAdminProducts();
-  } else {
-    alert("Gagal menambahkan produk.");
+  if (error || !inserted?.length) return alert("Gagal menambah produk");
+
+  for (let size of sizes) {
+    await client.from('product_sizes').insert({
+      product_id: inserted[0].id,
+      size,
+      stock: 10 // default stok awal
+    });
   }
+
+  alert("Produk berhasil ditambahkan!");
+  loadAdminProducts();
 }
 
-function editProduct(id, name, price, image) {
-  const newName = prompt("Edit Nama Produk:", name);
-  const newPriceStr = prompt("Edit Harga Produk:", price);
-  const newImage = prompt("Edit URL Gambar Produk:", image);
+async function editProduct(id) {
+  const newName = prompt("Nama baru:");
+  const newPrice = prompt("Harga baru:");
 
-  if (!newName || !newPriceStr || !newImage) {
-    alert("Semua field harus diisi!");
-    return;
-  }
+  if (!newName || !newPrice) return;
 
-  const newPrice = parseInt(newPriceStr);
-  if (isNaN(newPrice)) {
-    alert("Harga harus berupa angka!");
-    return;
-  }
+  const { error } = await client.from('products').update({
+    name: newName,
+    price: parseHarga(newPrice)
+  }).eq('id', id);
 
-  fetch(`${SUPABASE_URL}/rest/v1/products?id=eq.${id}`, {
-    method: 'PATCH',
-    headers: {
-      apikey: SUPABASE_API_KEY,
-      Authorization: `Bearer ${SUPABASE_API_KEY}`,
-      'Content-Type': 'application/json',
-      Prefer: 'return=representation'
-    },
-    body: JSON.stringify({ name: newName, price: newPrice, image: newImage })
-  }).then(async res => {
-    if (res.ok) {
-      const updatedProduct = await res.json();
-      const productId = updatedProduct[0].id;
-
-      const existingSizesRes = await fetch(`${SUPABASE_URL}/rest/v1/product_sizes?product_id=eq.${productId}`, {
-        headers: {
-          apikey: SUPABASE_API_KEY,
-          Authorization: `Bearer ${SUPABASE_API_KEY}`
-        }
-      });
-      const existingSizes = await existingSizesRes.json();
-
-      for (let size = 36; size <= 46; size++) {
-        const inputStock = prompt(`Stok untuk Ukuran ${size}:`, "0");
-        const stock = parseInt(inputStock);
-        if (!isNaN(stock)) {
-          const existing = existingSizes.find(s => s.size === size);
-          if (existing) {
-            await fetch(`${SUPABASE_URL}/rest/v1/product_sizes?product_id=eq.${productId}&size=eq.${size}`, {
-              method: 'PATCH',
-              headers: {
-                apikey: SUPABASE_API_KEY,
-                Authorization: `Bearer ${SUPABASE_API_KEY}`,
-                'Content-Type': 'application/json'
-              },
-              body: JSON.stringify({ stock })
-            });
-          } else {
-            await fetch(`${SUPABASE_URL}/rest/v1/product_sizes`, {
-              method: 'POST',
-              headers: {
-                apikey: SUPABASE_API_KEY,
-                Authorization: `Bearer ${SUPABASE_API_KEY}`,
-                'Content-Type': 'application/json'
-              },
-              body: JSON.stringify({ product_id: productId, size, stock })
-            });
-          }
-        }
-      }
-
-      loadAdminProducts();
-    } else {
-      alert("Gagal update.");
-    }
-  });
+  if (error) return alert("Gagal update: " + error.message);
+  alert("Produk berhasil diupdate!");
+  loadAdminProducts();
 }
 
 async function deleteProduct(id) {
-  if (!confirm("Yakin ingin menghapus produk ini beserta semua ukuran?")) return;
-
-  console.log("Menghapus ukuran untuk product ID:", id);
-  const resSize = await fetch(`${SUPABASE_URL}/rest/v1/product_sizes?product_id=eq.${id}`, {
-    method: 'DELETE',
-    headers: {
-      apikey: SUPABASE_API_KEY,
-      Authorization: `Bearer ${SUPABASE_API_KEY}`
-    }
-  });
-  console.log("Respon hapus ukuran:", resSize.status);
-
-  console.log("Menghapus produk utama:", id);
-  const resProduct = await fetch(`${SUPABASE_URL}/rest/v1/products?id=eq.${id}`, {
-    method: 'DELETE',
-    headers: {
-      apikey: SUPABASE_API_KEY,
-      Authorization: `Bearer ${SUPABASE_API_KEY}`
-    }
-  });
-  console.log("Respon hapus produk:", resProduct.status);
-
-  if (resProduct.ok) {
-    alert("Produk berhasil dihapus!");
-    loadAdminProducts();
-  } else {
-    alert("Gagal menghapus produk.");
-    const errorMsg = await resProduct.text();
-    console.error("Error detail:", errorMsg);
-  }
+  if (!confirm("Yakin ingin menghapus produk ini?")) return;
+  await client.from('product_sizes').delete().eq('product_id', id);
+  await client.from('products').delete().eq('id', id);
+  alert("Produk dihapus.");
+  loadAdminProducts();
 }
+
+
+
 
