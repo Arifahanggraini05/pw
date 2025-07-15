@@ -24,14 +24,16 @@ async function login() {
   }
 }
 
+window.login = login;
+
+
 async function logout() {
   await supabase.auth.signOut();
   location.reload();
 }
 
-// Registrasi ke window supaya bisa dipanggil dari onclick di HTML
-window.login = login;
 window.logout = logout;
+
 
 
 window.logout = async () => {
@@ -81,14 +83,15 @@ async function fetchProdukAdmin() {
   if (error) return console.error(error);
 
   produkList.innerHTML = data.map(p => `
-    <div class="card">
-      <img src="${p.image}" width="100" />
-      <p><strong>${p.name}</strong></p>
-      <p>Rp ${p.price.toLocaleString()}</p>
-      <button onclick="showEditForm(${p.id}, '${p.name}', ${p.price}, '${p.image}')">Edit</button>
-      <button onclick="hapusProduk(${p.id})">Hapus</button>
-    </div>
-  `).join('');
+  <div class="card">
+    <img src="${p.image}" width="100" />
+    <p><strong>${p.name}</strong></p>
+    <p>Rp ${p.price.toLocaleString()}</p>
+    <button onclick='showEditForm(${p.id}, ${JSON.stringify(p.name)}, ${p.price}, ${JSON.stringify(p.image)})'>Edit</button>
+    <button onclick="hapusProduk(${p.id})">Hapus</button>
+  </div>
+`).join('');
+
 }
 
 window.hapusProduk = async (id) => {
