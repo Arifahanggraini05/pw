@@ -205,8 +205,43 @@ window.printReceipt = async () => {
 window.toggleBankDropdown = () => {
   const metode = document.getElementById('metodeBayar').value;
   const bankDropdown = document.getElementById('bankDropdown');
-  bankDropdown.classList.toggle('hidden', metode !== 'transfer');
+  const vaInfo = document.getElementById('vaInfo');
+  const qrImage = document.getElementById('qrImage');
+  const qrCode = document.getElementById('qrCode');
+
+  // Reset tampilan
+  bankDropdown.classList.add('hidden');
+  vaInfo.classList.add('hidden');
+  qrImage.classList.add('hidden');
+  vaInfo.innerHTML = '';
+
+  if (metode === 'transfer') {
+    bankDropdown.classList.remove('hidden');
+  } else if (metode === 'dana') {
+    vaInfo.classList.remove('hidden');
+    vaInfo.innerHTML = `<p><strong>No VA DANA:</strong> 081280306674</p>`;
+  } else if (metode === 'qris') {
+    qrImage.classList.remove('hidden');
+    qrCode.src = 'qr-code.png'; 
+  }
 };
+
+window.handleBankChange = () => {
+  const bank = document.getElementById('bank').value;
+  const vaInfo = document.getElementById('vaInfo');
+
+  vaInfo.classList.remove('hidden');
+  vaInfo.innerHTML = ''; // Reset
+
+  if (bank === 'BCA') {
+    vaInfo.innerHTML = `<p><strong>No VA BCA:</strong> 4061723352</p>`;
+  } else if (bank === 'BNI') {
+    vaInfo.innerHTML = `<p><strong>No VA BNI:</strong> 9876543210</p>`;
+  } else if (bank === 'Mandiri') {
+    vaInfo.innerHTML = `<p><strong>No VA Mandiri:</strong> 1330027199868</p>`;
+  }
+};
+
   
 
 // Saat halaman dimuat, cek apakah ada keranjang
