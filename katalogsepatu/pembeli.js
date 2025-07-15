@@ -86,11 +86,15 @@ window.checkout = async () => {
   const alamat = document.getElementById('alamat').value;
   const noHp = document.getElementById('noHp').value;
   const metodeBayar = document.getElementById('metodeBayar').value;
+  const bank = document.getElementById('bank')?.value || '';
   const metodeKirim = document.getElementById('metodeKirim').value;
   const cart = JSON.parse(localStorage.getItem('cart')) || [];
 
   if (!nama || !alamat || !noHp || !metodeBayar || !metodeKirim) {
-    return alert('Isi semua data pembeli');
+    return alert('Isi semua data pembeli dengan lengkap');
+  }
+  if (metodeBayar === 'transfer' && !bank) {
+    return alert('Pilih bank jika memilih transfer bank');
   }
 
   for (const item of cart) {
@@ -101,7 +105,7 @@ window.checkout = async () => {
       buyer_name: nama,
       address: alamat,
       phone: noHp,
-      payment_method: metodeBayar,
+      payment_method: metodeBayar === 'transfer' ? `Transfer - ${bank}` : metodeBayar,
       shipping_method: metodeKirim,
     });
   }
@@ -120,7 +124,7 @@ window.printReceipt = async () => {
   const nama = document.getElementById('namaPembeli').value;
   const alamat = document.getElementById('alamat').value;
   const noHp = document.getElementById('noHp').value;
-  const metodeBayar = document.getElementById('metodeBayar').value;
+  const bank = document.getElementById('bank')?.value || '';
   const metodeKirim = document.getElementById('metodeKirim').value;
 
   if (!nama || !alamat || !noHp || !metodeBayar || !metodeKirim) {
@@ -165,6 +169,13 @@ window.printReceipt = async () => {
   // Sembunyikan kembali
   receipt.classList.add('hidden');
 };
+
+window.toggleBankDropdown = () => {
+  const metode = document.getElementById('metodeBayar').value;
+  const bankDropdown = document.getElementById('bankDropdown');
+  bankDropdown.classList.toggle('hidden', metode !== 'transfer');
+};
+  
 
 // Saat halaman dimuat, cek apakah ada keranjang
 window.addEventListener('DOMContentLoaded', () => {
