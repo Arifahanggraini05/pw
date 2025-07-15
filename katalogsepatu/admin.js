@@ -8,6 +8,8 @@ const loginSection = document.getElementById('loginSection');
 const adminSection = document.getElementById('adminSection');
 const formProduk = document.getElementById('formProduk');
 const riwayat = document.getElementById('riwayat');
+const produkList = document.getElementById('produkList');
+const editForm = document.getElementById('editForm');
 
 async function login() {
   const email = document.getElementById('email').value;
@@ -23,23 +25,13 @@ async function login() {
     alert('Login gagal');
   }
 }
-
 window.login = login;
-
 
 async function logout() {
   await supabase.auth.signOut();
   location.reload();
 }
-
 window.logout = logout;
-
-
-
-window.logout = async () => {
-  await supabase.auth.signOut();
-  location.reload();
-};
 
 formProduk?.addEventListener('submit', async (e) => {
   e.preventDefault();
@@ -54,13 +46,16 @@ formProduk?.addEventListener('submit', async (e) => {
 
   const { error: insertError } = await supabase.from('products').insert({ name, price, image: imageData.publicUrl });
   if (insertError) return alert('Gagal simpan produk');
+
   formProduk.reset();
   alert('Produk ditambahkan');
+  fetchProdukAdmin(); // Refresh daftar produk
 });
 
 async function fetchRiwayat() {
-  const { data, error } = await supabase.from('orders').select('*, products(name)';
+  const { data, error } = await supabase.from('orders').select('*, products(name)');
   if (error) return console.error(error);
+
   riwayat.innerHTML = data.map(o => `
     <div class="card">
       <p><strong>Produk:</strong> ${o.products?.name || 'Tidak ditemukan'}</p>
@@ -76,22 +71,19 @@ async function fetchRiwayat() {
   `).join('');
 }
 
-const produkList = document.getElementById('produkList');
-
 async function fetchProdukAdmin() {
   const { data, error } = await supabase.from('products').select('*');
   if (error) return console.error(error);
 
   produkList.innerHTML = data.map(p => `
-  <div class="card">
-    <img src="${p.image}" width="100" />
-    <p><strong>${p.name}</strong></p>
-    <p>Rp ${p.price.toLocaleString()}</p>
-    <button onclick='showEditForm(${p.id}, ${JSON.stringify(p.name)}, ${p.price}, ${JSON.stringify(p.image)})'>Edit</button>
-    <button onclick="hapusProduk(${p.id})">Hapus</button>
-  </div>
-`).join('');
-
+    <div class="card">
+      <img src="${p.image}" width="100" />
+      <p><strong>${p.name}</strong></p>
+      <p>Rp ${p.price.toLocaleString()}</p>
+      <button onclick='showEditForm(${p.id}, ${JSON.stringify(p.name)}, ${p.price}, ${JSON.stringify(p.image)})'>Edit</button>
+      <button onclick="hapusProduk(${p.id})">Hapus</button>
+    </div>
+  `).join('');
 }
 
 window.hapusProduk = async (id) => {
@@ -103,23 +95,6 @@ window.hapusProduk = async (id) => {
   alert('Produk berhasil dihapus');
   fetchProdukAdmin();
 };
-
-window.editProduk = (id, nama, harga) => {
-  const newName = prompt('Edit Nama Produk:', nama);
-  const newPrice = prompt('Edit Harga Produk:', harga);
-  if (newName && newPrice) {
-    updateProduk(id, newName, parseInt(newPrice));
-  }
-};
-
-async function updateProduk(id, name, price) {
-  const { error } = await supabase.from('products').update({ name, price }).eq('id', id);
-  if (error) return alert('Gagal update produk');
-  alert('Produk berhasil diupdate');
-  fetchProdukAdmin();
-}
-
-const editForm = document.getElementById('editForm');
 
 window.showEditForm = (id, name, price, image) => {
   document.getElementById('editId').value = id;
@@ -139,8 +114,6 @@ window.submitEdit = async () => {
   const file = document.getElementById('editGambar').files[0];
 
   let imageUrl = null;
-
-  // Jika admin upload gambar baru
   if (file) {
     const fileName = `${Date.now()}.${file.name.split('.').pop()}`;
     const { error: uploadError } = await supabase.storage.from('images').upload(fileName, file);
@@ -151,7 +124,6 @@ window.submitEdit = async () => {
   }
 
   const updateData = imageUrl ? { name, price, image: imageUrl } : { name, price };
-
   const { error } = await supabase.from('products').update(updateData).eq('id', id);
   if (error) return alert('Gagal update produk');
 
@@ -160,14 +132,12 @@ window.submitEdit = async () => {
   fetchProdukAdmin();
 };
 
-
-
-
 (async () => {
   const { data: { session } } = await supabase.auth.getSession();
   if (session) {
     loginSection.classList.add('hidden');
     adminSection.classList.remove('hidden');
     fetchRiwayat();
+    fetchProdukAdmin();
   }
 })();
