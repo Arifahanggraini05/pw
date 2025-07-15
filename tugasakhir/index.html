@@ -32,7 +32,8 @@
     <h3>Tambah Produk</h3>
     <input type="text" id="newName" placeholder="Nama Sepatu" />
     <input type="number" id="newPrice" placeholder="Harga" />
-    <input type="text" id="newImage" placeholder="URL Gambar" />
+    <input type="file" id="newImage" accept="image/*" />
+    <img id="imagePreview" src="#" alt="Preview" style="display:none; max-width:200px; margin-top:10px;"/>
     <button onclick="addProduct()">Tambah Produk</button>
 
     <h3>Daftar Produk</h3>
