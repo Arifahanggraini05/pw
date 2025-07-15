@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Admin</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <h1>Dashboard Admin</h1>
+
+  <div id="loginSection">
+    <h2>Login Admin</h2>
+    <input type="email" id="email" placeholder="Email admin" />
+    <input type="password" id="password" placeholder="Password" />
+    <button onclick="login()">Login</button>
+  </div>
+
+  <div id="adminSection" class="hidden">
+    <button onclick="logout()">Logout</button>
+
+    <form id="formProduk">
+      <input type="text" id="nama" placeholder="Nama Sepatu" required />
+      <input type="number" id="harga" placeholder="Harga" required />
+      <input type="file" id="gambar" accept="image/*" required />
+      <button type="submit">Tambah Produk</button>
+    </form>
+
+    <h2>Riwayat Pembelian</h2>
+    <div id="riwayat"></div>
+  </div>
+
+  <script type="module" src="admin.js"></script>
+</body>
+</html>
