@@ -1,7 +1,7 @@
 // [script.js]
-
-const SUPABASE_URL = 'https://hmwtsbgdizxkkhcwaury.supabase.co';
-const SUPABASE_API_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imhtd3RzYmdkaXp4a2toY3dhdXJ5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDk1MjcyMzksImV4cCI6MjA2NTEwMzIzOX0.BSq6ScSU9zQ8UywyM5Z3RrSvcYKzpGmxUjA_xKYsAVY';
+const supabase = supabase.createClient('https://hmwtsbgdizxkkhcwaury.supabase.co', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imhtd3RzYmdkaXp4a2toY3dhdXJ5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDk1MjcyMzksImV4cCI6MjA2NTEwMzIzOX0.BSq6ScSU9zQ8UywyM5Z3RrSvcYKzpGmxUjA_xKYsAVY');
+const SUPABASE_URL = ;
+const SUPABASE_API_KEY = 
 
 let products = [], cart = [];
 let shippingCost = 15000;
@@ -404,106 +404,265 @@ async function loadAdminSizeStock(productId) {
     : '<li>Belum ada data ukuran</li>';
 }
 
+async function uploadImage(file) {
+  const fileExt = file.name.split('.').pop();
+  const fileName = `${Math.random()}.${fileExt}`;
+  const filePath = `${fileName}`;
+
+  const { error } = await supabase
+    .storage
+    .from('product-images')
+    .upload(filePath, file);
+
+  if (error) throw error;
+
+  return filePath;
+}
+
 async function addProduct() {
   const name = document.getElementById('newName').value;
   const price = parseInt(document.getElementById('newPrice').value);
-  const image = document.getElementById('newImage').value;
+  const imageFile = document.getElementById('newImage').files[0];
 
-  if (!name || !price || !image) return alert("Isi semua field!");
+  if (!name || !price || !imageFile) return alert("Isi semua field!");
 
-  const res = await fetch(`${SUPABASE_URL}/rest/v1/products`, {
-    method: 'POST',
-    headers: {
-      apikey: SUPABASE_API_KEY,
-      Authorization: `Bearer ${SUPABASE_API_KEY}`,
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({ name, price, image })
-  });
+  try {
+    // 1. Upload gambar
+    const imagePath = await uploadImage(imageFile);
+    
+    // 2. Dapatkan URL publik
+    const { data: { publicUrl } } = supabase
+      .storage
+      .from('product-images')
+      .getPublicUrl(imagePath);
 
-  if (res.ok) {
-    alert("Produk ditambahkan!");
-    document.getElementById('newName').value = '';
-    document.getElementById('newPrice').value = '';
-    document.getElementById('newImage').value = '';
-    loadAdminProducts();
-  } else {
-    alert("Gagal menambahkan produk.");
+    // 3. Simpan data produk
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/products`, {
+      method: 'POST',
+      headers: {
+        apikey: SUPABASE_API_KEY,
+        Authorization: `Bearer ${SUPABASE_API_KEY}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ 
+        name, 
+        price, 
+        image: publicUrl 
+      })
+    });
+
+    if (res.ok) {
+      alert("Produk ditambahkan!");
+      document.getElementById('newName').value = '';
+      document.getElementById('newPrice').value = '';
+      document.getElementById('newImage').value = '';
+      document.getElementById('imagePreview').style.display = 'none';
+      loadAdminProducts();
+    }
+  } catch (error) {
+    console.error("Error:", error);
+    alert("Gagal menambahkan produk");
   }
 }
-
-function editProduct(id, name, price, image) {
-  const newName = prompt("Edit Nama Produk:", name);
-  const newPriceStr = prompt("Edit Harga Produk:", price);
-  const newImage = prompt("Edit URL Gambar Produk:", image);
-
-  if (!newName || !newPriceStr || !newImage) {
-    alert("Semua field harus diisi!");
-    return;
+document.getElementById('newImage').addEventListener('change', function(e) {
+  const preview = document.getElementById('imagePreview');
+  if (this.files && this.files[0]) {
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      preview.src = e.target.result;
+      preview.style.display = 'block';
+    }
+    reader.readAsDataURL(this.files[0]);
   }
+});
 
+
+
+async function editProduct(id, currentName, currentPrice, currentImage) {
+  // 1. Input data teks
+  const newName = prompt("Edit Nama Produk:", currentName);
+  if (newName === null) return; // Jika user cancel
+  
+  const newPriceStr = prompt("Edit Harga Produk:", currentPrice);
+  if (newPriceStr === null) return;
+  
   const newPrice = parseInt(newPriceStr);
   if (isNaN(newPrice)) {
     alert("Harga harus berupa angka!");
     return;
   }
 
-  fetch(`${SUPABASE_URL}/rest/v1/products?id=eq.${id}`, {
-    method: 'PATCH',
-    headers: {
-      apikey: SUPABASE_API_KEY,
-      Authorization: `Bearer ${SUPABASE_API_KEY}`,
-      'Content-Type': 'application/json',
-      Prefer: 'return=representation'
-    },
-    body: JSON.stringify({ name: newName, price: newPrice, image: newImage })
-  }).then(async res => {
-    if (res.ok) {
-      const updatedProduct = await res.json();
-      const productId = updatedProduct[0].id;
-
-      const existingSizesRes = await fetch(`${SUPABASE_URL}/rest/v1/product_sizes?product_id=eq.${productId}`, {
-        headers: {
-          apikey: SUPABASE_API_KEY,
-          Authorization: `Bearer ${SUPABASE_API_KEY}`
-        }
-      });
-      const existingSizes = await existingSizesRes.json();
-
-      for (let size = 36; size <= 46; size++) {
-        const inputStock = prompt(`Stok untuk Ukuran ${size}:`, "0");
-        const stock = parseInt(inputStock);
-        if (!isNaN(stock)) {
-          const existing = existingSizes.find(s => s.size === size);
-          if (existing) {
-            await fetch(`${SUPABASE_URL}/rest/v1/product_sizes?product_id=eq.${productId}&size=eq.${size}`, {
-              method: 'PATCH',
-              headers: {
-                apikey: SUPABASE_API_KEY,
-                Authorization: `Bearer ${SUPABASE_API_KEY}`,
-                'Content-Type': 'application/json'
-              },
-              body: JSON.stringify({ stock })
-            });
+  // 2. Handle upload gambar baru
+  let newImage = currentImage;
+  const shouldUpdateImage = confirm("Update gambar produk? Klik OK untuk memilih gambar baru, Cancel untuk tetap menggunakan gambar lama.");
+  
+  if (shouldUpdateImage) {
+    try {
+      // Buat input file secara dinamis
+      const fileInput = document.createElement('input');
+      fileInput.type = 'file';
+      fileInput.accept = 'image/*';
+      
+      // Buka dialog pilih file
+      fileInput.click();
+      
+      // Tunggu user memilih file
+      const file = await new Promise((resolve, reject) => {
+        fileInput.addEventListener('change', (e) => {
+          if (e.target.files && e.target.files[0]) {
+            resolve(e.target.files[0]);
           } else {
-            await fetch(`${SUPABASE_URL}/rest/v1/product_sizes`, {
-              method: 'POST',
-              headers: {
-                apikey: SUPABASE_API_KEY,
-                Authorization: `Bearer ${SUPABASE_API_KEY}`,
-                'Content-Type': 'application/json'
-              },
-              body: JSON.stringify({ product_id: productId, size, stock })
-            });
+            reject(new Error('No file selected'));
           }
+        });
+        
+        // Handle jika dialog ditutup
+        fileInput.addEventListener('cancel', () => {
+          reject(new Error('File selection cancelled'));
+        });
+      });
+      
+      // Upload gambar baru
+      if (file) {
+        // Validasi ukuran file (max 5MB)
+        if (file.size > 5 * 1024 * 1024) {
+          alert("Ukuran file terlalu besar. Maksimal 5MB.");
+          return;
         }
+        
+        // Validasi tipe file
+        if (!file.type.match('image.*')) {
+          alert("File harus berupa gambar");
+          return;
+        }
+        
+        // Tampilkan loading
+        const loading = alert("Mengupload gambar...");
+        
+        // Upload ke Supabase Storage
+        const imagePath = await uploadImage(file);
+        const { data: { publicUrl } } = supabase
+          .storage
+          .from('product-images')
+          .getPublicUrl(imagePath);
+        
+        newImage = publicUrl;
+        
+        // Hapus loading
+        if (loading) loading.close();
       }
+    } catch (error) {
+      console.error("Error uploading image:", error);
+      }
+  }
 
-      loadAdminProducts();
-    } else {
-      alert("Gagal update.");
+  // 3. Update data produk di database
+  try {
+    const updateResponse = await fetch(`${SUPABASE_URL}/rest/v1/products?id=eq.${id}`, {
+      method: 'PATCH',
+      headers: {
+        apikey: SUPABASE_API_KEY,
+        Authorization: `Bearer ${SUPABASE_API_KEY}`,
+        'Content-Type': 'application/json',
+        Prefer: 'return=representation'
+      },
+      body: JSON.stringify({ 
+        name: newName, 
+        price: newPrice, 
+        image: newImage 
+      })
+    });
+
+    if (!updateResponse.ok) {
+      throw new Error("Gagal update produk");
     }
-  });
+
+    // 4. Update stok per ukuran
+    const existingSizesRes = await fetch(`${SUPABASE_URL}/rest/v1/product_sizes?product_id=eq.${id}`, {
+      headers: {
+        apikey: SUPABASE_API_KEY,
+        Authorization: `Bearer ${SUPABASE_API_KEY}`
+      }
+    });
+    
+    const existingSizes = await existingSizesRes.json();
+    
+    // Loop melalui semua ukuran sepatu (36-46)
+    for (let size = 36; size <= 46; size++) {
+      const currentStock = existingSizes.find(s => s.size === size)?.stock || 0;
+      const newStockStr = prompt(`Stok untuk Ukuran ${size}:`, currentStock.toString());
+      
+      if (newStockStr === null) continue; // Skip jika user cancel
+      
+      const newStock = parseInt(newStockStr);
+      if (isNaN(newStock)) {
+        alert(`Stok ukuran ${size} harus angka! Diisi dengan 0.`);
+        continue;
+      }
+      
+      const existingSize = existingSizes.find(s => s.size === size);
+      
+      if (existingSize) {
+        // Update stok yang sudah ada
+        await fetch(`${SUPABASE_URL}/rest/v1/product_sizes?product_id=eq.${id}&size=eq.${size}`, {
+          method: 'PATCH',
+          headers: {
+            apikey: SUPABASE_API_KEY,
+            Authorization: `Bearer ${SUPABASE_API_KEY}`,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ stock: newStock })
+        });
+      } else {
+        // Tambahkan stok baru jika belum ada
+        await fetch(`${SUPABASE_URL}/rest/v1/product_sizes`, {
+          method: 'POST',
+          headers: {
+            apikey: SUPABASE_API_KEY,
+            Authorization: `Bearer ${SUPABASE_API_KEY}`,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ 
+            product_id: id, 
+            size: size, 
+            stock: newStock 
+          })
+        });
+      }
+    }
+    
+    alert("Produk berhasil diupdate!");
+    loadAdminProducts();
+    
+  } catch (error) {
+    console.error("Error updating product:", error);
+    alert("Gagal update produk: " + error.message);
+  }
+}
+
+// Fungsi helper untuk upload gambar
+async function uploadImage(file) {
+  const fileExt = file.name.split('.').pop();
+  const fileName = `${Date.now()}-${Math.random().toString(36).substr(2, 9)}.${fileExt}`;
+  const filePath = `products/${fileName}`;
+
+  const { error } = await supabase
+    .storage
+    .from('product-images')
+    .upload(filePath, file, {
+      cacheControl: '3600',
+      upsert: false
+    });
+
+  if (error) {
+    if (error.message.includes('duplicate')) {
+      // Jika nama file duplikat, coba lagi dengan nama berbeda
+      return uploadImage(file);
+    }
+    throw error;
+  }
+
+  return filePath;
 }
 
 async function deleteProduct(id) {
