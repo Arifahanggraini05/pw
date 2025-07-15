@@ -24,7 +24,19 @@
       <input type="number" id="harga" placeholder="Harga" required />
       <input type="file" id="gambar" accept="image/*" required />
       <button type="submit">Tambah Produk</button>
+      <h2>Daftar Produk</h2>
+      <div id="produkList"></div>
+      <div id="editForm" class="hidden">
+        <h3>Edit Produk</h3>
+        <input type="text" id="editNama" placeholder="Nama Baru" />
+        <input type="number" id="editHarga" placeholder="Harga Baru" />
+        <input type="file" id="editGambar" accept="image/*" />
+        <input type="hidden" id="editId" />
+        <button onclick="submitEdit()">Simpan Perubahan</button>
+        <button onclick="cancelEdit()">Batal</button>
+      </div>
     </form>
+
 
     <h2>Riwayat Pembelian</h2>
     <div id="riwayat"></div>
